@@ -1,0 +1,12 @@
+# .NET
+[Bb]in/
+[Oo]bj/
+[Pp]ackages/
+
+# Intellj
+.idea
+
+# Config files
+.env
+appsettings.local.json
+*.bicepparam

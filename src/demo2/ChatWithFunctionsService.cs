@@ -97,27 +97,6 @@ public class ChatWithFunctionsService
         return false;
     }
 
-    public async Task<string> TypeMessageWithoutMemory(string message)
-    {
-        try
-        {
-            var messages = new List<ChatRequestMessage>
-            {
-                _systemMessage,
-                new ChatRequestUserMessage(message)
-            };
-            var response = await _client.GetChatCompletionsAsync(new ChatCompletionsOptions(_model, messages));
-
-            var responseMessage = response.Value.Choices.First().Message.Content;
-            return responseMessage;
-        }
-        catch (Exception e)
-        {
-            Log.Error(e, "Failed to get chat completions");
-            return "I'm sorry, I can't do that right now.";
-        }
-    }
-
     public async IAsyncEnumerable<string> TypeAndStreamMessageAsync(string message)
     {
         _memory.Add(new ChatRequestUserMessage(message));

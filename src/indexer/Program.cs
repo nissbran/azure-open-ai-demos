@@ -5,6 +5,7 @@ using SwapiIndexer;
 
 var configuration = new ConfigurationBuilder()
     .AddEnvironmentVariables()
+    .AddJsonFile("appsettings.json", false)
     .AddJsonFile("appsettings.local.json", true)
     .Build();
 

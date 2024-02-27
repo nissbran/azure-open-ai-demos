@@ -6,11 +6,13 @@ using Spectre.Console;
 
 var configuration = new ConfigurationBuilder()
     .AddEnvironmentVariables()
+    .AddJsonFile("appsettings.json", false)
     .AddJsonFile("appsettings.local.json", true)
     .Build();
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Information()
+    .ReadFrom.Configuration(configuration)
     .WriteTo.Console(theme: AnsiConsoleTheme.Sixteen)
     .CreateLogger();
 
@@ -37,13 +39,6 @@ while (true)
             AnsiConsole.MarkupLine($"[bold red]{botName}:[/] Goodbye!");
             return;
         default:
-            if (!useMemory)
-            {
-                var response = await chatService.TypeMessageWithoutMemory(message);
-                AnsiConsole.MarkupLine($"[bold red]{botName}:[/] " + response);
-                break;
-            }
-            
             if (useStreaming)
             {
                 AnsiConsole.Markup($"[bold red]{botName}:[/] "); 

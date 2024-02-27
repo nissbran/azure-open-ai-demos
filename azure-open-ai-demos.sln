@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo1", "src\demo1\Demo1.cs
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo2", "src\demo2\Demo2.csproj", "{2502B08E-ADF2-4366-A2AC-ACBDF4F25D91}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo3", "src\demo3\Demo3.csproj", "{395047CC-01D0-4E30-A4D4-4D9E9E4E23C6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CopilotSandbox", "src\ghcopilotsandbox\CopilotSandbox.csproj", "{370104B0-7B4F-418E-A732-B182F8ABE039}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +31,14 @@ Global
 		{2502B08E-ADF2-4366-A2AC-ACBDF4F25D91}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2502B08E-ADF2-4366-A2AC-ACBDF4F25D91}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2502B08E-ADF2-4366-A2AC-ACBDF4F25D91}.Release|Any CPU.Build.0 = Release|Any CPU
+		{395047CC-01D0-4E30-A4D4-4D9E9E4E23C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{395047CC-01D0-4E30-A4D4-4D9E9E4E23C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{395047CC-01D0-4E30-A4D4-4D9E9E4E23C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{395047CC-01D0-4E30-A4D4-4D9E9E4E23C6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{370104B0-7B4F-418E-A732-B182F8ABE039}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{370104B0-7B4F-418E-A732-B182F8ABE039}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{370104B0-7B4F-418E-A732-B182F8ABE039}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{370104B0-7B4F-418E-A732-B182F8ABE039}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

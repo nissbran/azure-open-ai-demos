@@ -19,8 +19,6 @@ Log.Logger = new LoggerConfiguration()
 // Create chat service
 var chatService = new ChatWithFunctionsService(configuration);
 const string botName = "Star Wars Assistant";
-const bool useStreaming = false;
-const bool useMemory = true;
 
 // Run chat
 WriteWelcomeMessage();
@@ -39,22 +37,9 @@ while (true)
             AnsiConsole.MarkupLine($"[bold red]{botName}:[/] Goodbye!");
             return;
         default:
-            if (useStreaming)
-            {
-                AnsiConsole.Markup($"[bold red]{botName}:[/] "); 
-                await foreach (var chunk in chatService.TypeAndStreamMessageAsync(message))
-                {
-                    AnsiConsole.Write(chunk);
-                }
-                AnsiConsole.WriteLine();
-                break;
-            }
-            else
-            {
-                var response = await chatService.TypeMessageAsync(message);
-                AnsiConsole.Markup($"[bold red]{botName}:[/] ");
-                AnsiConsole.WriteLine(string.IsNullOrEmpty(response) ? "I'm sorry, I can't do that right now." : response);
-            }
+            var response = await chatService.TypeMessageAsync(message);
+            AnsiConsole.Markup($"[bold red]{botName}:[/] ");
+            AnsiConsole.WriteLine(string.IsNullOrEmpty(response) ? "I'm sorry, I can't do that right now." : response);
             break;
     }
 }

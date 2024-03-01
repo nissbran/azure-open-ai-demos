@@ -96,40 +96,4 @@ public class ChatWithFunctionsService
 
         return false;
     }
-
-    public async IAsyncEnumerable<string> TypeAndStreamMessageAsync(string message)
-    {
-        _memory.Add(new ChatRequestUserMessage(message));
-
-        StreamingResponse<StreamingChatCompletionsUpdate> streamingResponse = null;
-        var ifError = false;
-
-        try
-        {
-            streamingResponse = await _client.GetChatCompletionsStreamingAsync(new ChatCompletionsOptions(_model, _memory));
-        }
-        catch (Exception e)
-        {
-            Log.Error(e, "Failed to get chat completions");
-            ifError = true;
-        }
-
-        if (ifError)
-        {
-            yield return "I'm sorry, I can't do that right now.";
-            yield break;
-        }
-
-        var fullMessageBuilder = new StringBuilder();
-        await foreach (var update in streamingResponse)
-        {
-            var content = update.ContentUpdate;
-            if (string.IsNullOrEmpty(content))
-                continue;
-            fullMessageBuilder.Append(content);
-            yield return content;
-        }
-
-        _memory.Add(new ChatRequestAssistantMessage(fullMessageBuilder.ToString()));
-    }
 }

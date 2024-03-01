@@ -8,5 +8,9 @@
     </PropertyGroup>
     
     
+  <ItemGroup>
+    <PackageReference Include="Azure.AI.FormRecognizer" Version="4.1.0" />
+    <PackageReference Include="Azure.Identity" Version="1.10.4" />
+  </ItemGroup>
 
 </Project>

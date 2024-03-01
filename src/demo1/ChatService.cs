@@ -24,6 +24,7 @@ public class ChatService
         var endpoint = configuration["AzureOpenAI:Endpoint"];
         _model = configuration["AzureOpenAI:ChatModel"];
         _client = new OpenAIClient(new Uri(endpoint), new AzureKeyCredential(apiKey));
+        _memory.Add(_systemMessage);
     }
 
     public void StartNewSession()

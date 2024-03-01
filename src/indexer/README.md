@@ -1,6 +1,6 @@
 # Swapi Indexer
 
-Application used to index the Swapi api with Azure OpenAI and Azure Search.
+Application used to index the Swapi api with Azure OpenAI and Azure AI Search.
 
 ## To run
 

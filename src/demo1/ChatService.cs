@@ -15,7 +15,8 @@ public class ChatService
     private readonly OpenAIClient _client;
     private readonly string _model;
     
-    private readonly ChatRequestMessage _systemMessage = new ChatRequestSystemMessage("You are a helpful assistant. You will talk like a pirate.");
+    private readonly ChatRequestMessage _systemMessage = new ChatRequestSystemMessage(
+        "You are a helpful assistant. You will talk like a pirate.");
     private readonly List<ChatRequestMessage> _memory = new();
     
     public ChatService(IConfiguration configuration)

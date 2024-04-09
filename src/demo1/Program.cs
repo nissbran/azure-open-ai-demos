@@ -19,7 +19,7 @@ Log.Logger = new LoggerConfiguration()
 // Create chat service
 var chatService = new ChatService(configuration);
 const string botName = "Pirate Bot";
-const bool useStreaming = true;
+const bool useStreaming = false;
 const bool useMemory = true;
 
 // Run chat

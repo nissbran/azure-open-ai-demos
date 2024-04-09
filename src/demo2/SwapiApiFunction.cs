@@ -7,6 +7,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Azure.AI.OpenAI;
+using Serilog;
 
 namespace Demo2;
 
@@ -46,8 +47,16 @@ public class SwapiShipApiFunction : IGptFunction
 
     public async Task<string> CallStarWarsShipApi(SwapiShipApiFunctionParameters parameters)
     {
-        var response = await _httpClient.GetFromJsonAsync<SwapiResponse>($"starships?search={UrlEncoder.Default.Encode(parameters.ShipName)}");
-        return response.count == 0 ? "No starship found with that name." : ToGptReadable(response.results[0]);
+        try
+        {
+            var response = await _httpClient.GetFromJsonAsync<SwapiResponse>($"starships?search={UrlEncoder.Default.Encode(parameters.ShipName)}");
+            return response.count == 0 ? "No starship found with that name." : ToGptReadable(response.results[0]);
+        }
+        catch (Exception e)
+        {
+            Log.Error(e, "Failed to call Star Wars API");
+            return "No starship found with that name.";
+        }
     }
 
     private static string ToGptReadable(StarShip starShip)

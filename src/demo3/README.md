@@ -1,6 +1,6 @@
 # Demo2
 
-Azure OpenAI and RAG integration with Azure AI Search(Azure Cognitive Search) and function calling.
+Azure OpenAI and RAG integration with Assistant Api. Function calling with Azure AI Search(Azure Cognitive Search).
 
 ## To run
 

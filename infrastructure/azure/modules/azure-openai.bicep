@@ -49,6 +49,25 @@ resource instruct_deployment 'Microsoft.CognitiveServices/accounts/deployments@2
   ]
 }
 
+resource chat_35_deployment 'Microsoft.CognitiveServices/accounts/deployments@2023-05-01' = {
+  name: 'gpt-35-turbo'
+  parent: account
+  sku: {
+    name: 'Standard'
+    capacity: 50
+  }
+  properties: {
+    model: {
+      format: 'OpenAI'
+      name: 'gpt-35-turbo'
+      version: '1106'
+    }
+  }
+  dependsOn: [
+    instruct_deployment
+  ]
+}
+
 resource embedding_deployment 'Microsoft.CognitiveServices/accounts/deployments@2023-05-01' = {
   name: 'text-embedding-ada-002'
   parent: account
@@ -64,6 +83,6 @@ resource embedding_deployment 'Microsoft.CognitiveServices/accounts/deployments@
     }
   }
   dependsOn: [
-    instruct_deployment
+    chat_35_deployment
   ]
 }

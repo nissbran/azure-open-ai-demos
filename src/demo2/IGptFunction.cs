@@ -1,8 +1,9 @@
-﻿using Azure.AI.OpenAI;
+﻿using OpenAI.Assistants;
+using OpenAI.Chat;
 
 namespace Demo2;
 
 public interface IGptFunction
 {
-    FunctionDefinition GetFunctionDefinition();
+    ChatTool GetToolDefinition();
 }

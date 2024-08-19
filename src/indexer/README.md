@@ -12,7 +12,7 @@ Create a file called 'appsettings.local.json' in the root of the project with th
     "ApiKey": "  <your key>  ",
     "EmbeddingModel": " <your embedding model, ex embedding-ada-002- > "
   },
-  "AzureCognitiveSearch": {
+  "AzureAISearch": {
     "Endpoint": "https://   <your endpoint>   .search.windows.net",
     "ApiKey": "  <your key>  "
   }

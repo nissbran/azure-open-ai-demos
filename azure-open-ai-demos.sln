@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo3", "src\demo3\Demo3.cs
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CopilotSandbox", "src\ghcopilotsandbox\CopilotSandbox.csproj", "{370104B0-7B4F-418E-A732-B182F8ABE039}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo4", "src\demo4\Demo4.csproj", "{A7B8AD93-2AB2-4771-AEAC-66DCF0B02BF7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{370104B0-7B4F-418E-A732-B182F8ABE039}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{370104B0-7B4F-418E-A732-B182F8ABE039}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{370104B0-7B4F-418E-A732-B182F8ABE039}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A7B8AD93-2AB2-4771-AEAC-66DCF0B02BF7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7B8AD93-2AB2-4771-AEAC-66DCF0B02BF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A7B8AD93-2AB2-4771-AEAC-66DCF0B02BF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A7B8AD93-2AB2-4771-AEAC-66DCF0B02BF7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

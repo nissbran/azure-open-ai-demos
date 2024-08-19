@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ClientModel;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,6 +7,8 @@ using System.Threading.Tasks;
 using Azure;
 using Azure.AI.OpenAI;
 using Microsoft.Extensions.Configuration;
+using OpenAI;
+using OpenAI.Chat;
 using Serilog;
 
 namespace Demo1;
@@ -13,19 +16,21 @@ namespace Demo1;
 public class ChatService
 {
     private readonly OpenAIClient _client;
+    private readonly ChatClient _chatClient;
     private readonly string _model;
     
-    private readonly ChatRequestMessage _systemMessage = new ChatRequestSystemMessage(
+    private readonly ChatMessage _systemMessage = new SystemChatMessage(
         "You are a helpful assistant. You will talk like a pirate.");
-    private readonly List<ChatRequestMessage> _memory = new();
+    private readonly List<ChatMessage> _memory = new();
     
     public ChatService(IConfiguration configuration)
     {
         var apiKey = configuration["AzureOpenAI:ApiKey"];
         var endpoint = configuration["AzureOpenAI:Endpoint"];
         _model = configuration["AzureOpenAI:ChatModel"];
-        _client = new OpenAIClient(new Uri(endpoint), new AzureKeyCredential(apiKey));
+        _client = new AzureOpenAIClient(new Uri(endpoint), new AzureKeyCredential(apiKey));
         _memory.Add(_systemMessage);
+        _chatClient = _client.GetChatClient(_model);
     }
 
     public void StartNewSession()
@@ -38,11 +43,11 @@ public class ChatService
     {
         try
         {
-            _memory.Add(new ChatRequestUserMessage(message));
-            var response = await _client.GetChatCompletionsAsync(new ChatCompletionsOptions(_model, _memory));
+            _memory.Add(new UserChatMessage(message));
+            var response = await _chatClient.CompleteChatAsync(_memory);
             
-            var responseMessage = response.Value.Choices.First().Message.Content;
-            _memory.Add(new ChatRequestAssistantMessage(responseMessage));
+            var responseMessage = response.Value.Content.First().Text;
+            _memory.Add(new AssistantChatMessage(responseMessage));
             return responseMessage;
         }
         catch (Exception e)
@@ -56,14 +61,10 @@ public class ChatService
     {
         try
         {
-            var messages = new List<ChatRequestMessage>
-            {
-                _systemMessage,
-                new ChatRequestUserMessage(message)
-            };
-            var response = await _client.GetChatCompletionsAsync(new ChatCompletionsOptions(_model, messages));
+            var response = await _chatClient.CompleteChatAsync(_systemMessage, new UserChatMessage(message));
             
-            var responseMessage = response.Value.Choices.First().Message.Content;
+            var responseMessage = response.Value.Content.First().Text;
+            
             return responseMessage;
         }
         catch (Exception e)
@@ -75,14 +76,14 @@ public class ChatService
     
     public async IAsyncEnumerable<string> TypeAndStreamMessageAsync(string message)
     {
-        _memory.Add(new ChatRequestUserMessage(message));
+        _memory.Add(new UserChatMessage(message));
 
-        StreamingResponse<StreamingChatCompletionsUpdate> streamingResponse = null;
+        AsyncResultCollection<StreamingChatCompletionUpdate> streamingResponse = null;
         var ifError = false;
         
         try
         {
-            streamingResponse = await _client.GetChatCompletionsStreamingAsync(new ChatCompletionsOptions(_model, _memory));
+            streamingResponse = _chatClient.CompleteChatStreamingAsync(_memory);
         }
         catch (Exception e)
         {
@@ -100,12 +101,16 @@ public class ChatService
         await foreach (var update in streamingResponse)
         {
             var content = update.ContentUpdate;
-            if (string.IsNullOrEmpty(content))
-                continue;
-            fullMessageBuilder.Append(content);
-            yield return content;
+            foreach (var messageContentPart in content)
+            {
+                var text = messageContentPart.Text;
+                if (string.IsNullOrEmpty(text))
+                    continue;
+                fullMessageBuilder.Append(text);
+                yield return text;
+            }
         }
         
-        _memory.Add(new ChatRequestAssistantMessage(fullMessageBuilder.ToString()));
+        _memory.Add(new AssistantChatMessage(fullMessageBuilder.ToString()));
     }
 }

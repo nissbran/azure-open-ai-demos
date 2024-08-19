@@ -1,4 +1,4 @@
-using Demo1;
+using Demo4;
 using Microsoft.Extensions.Configuration;
 using Serilog;
 using Serilog.Sinks.SystemConsole.Themes;
@@ -17,13 +17,13 @@ Log.Logger = new LoggerConfiguration()
     .CreateLogger();
 
 // Create chat service
-var chatService = new ChatService(configuration);
-const string botName = "Pirate Bot";
-const bool useStreaming = false;
-const bool useMemory = false;
+var chatService = new ChatWithSemanticKernelService(configuration);
+string botName = "Star Wars Assistant";
 
 // Run chat
 WriteWelcomeMessage();
+
+chatService.StartNewSession();
 
 while (true)
 {
@@ -31,36 +31,19 @@ while (true)
     switch (message)
     {
         case "/clear":
+            Log.Verbose("Clearing the session");
             AnsiConsole.Clear();
             chatService.StartNewSession();
+            botName = "Star Wars Assistant";
             WriteWelcomeMessage();
             break;
         case "/q":
             AnsiConsole.MarkupLine($"[bold red]{botName}:[/] Goodbye!");
             return;
         default:
-            if (!useMemory)
-            {
-                var response = await chatService.TypeMessageWithoutMemory(message);
-                AnsiConsole.MarkupLine($"[bold red]{botName}:[/] " + response);
-                break;
-            }
-            
-            if (useStreaming)
-            {
-                AnsiConsole.Markup($"[bold red]{botName}:[/] "); 
-                await foreach (var chunk in chatService.TypeAndStreamMessageAsync(message))
-                {
-                    AnsiConsole.Write(chunk);
-                }
-                AnsiConsole.WriteLine();
-                break;
-            }
-            else
-            {
-                var response = await chatService.TypeMessageAsync(message);
-                AnsiConsole.MarkupLine($"[bold red]{botName}:[/] " + response); 
-            }
+            var response = await chatService.TypeMessageAsync(message);
+            AnsiConsole.Markup($"[bold red]{botName}:[/] ");
+            AnsiConsole.WriteLine(string.IsNullOrEmpty(response) ? "I'm sorry, I can't do that right now." : response);
             break;
     }
 }
@@ -68,7 +51,7 @@ while (true)
 void WriteWelcomeMessage()
 {
     AnsiConsole.MarkupLine("[bold green]Welcome to the chat![/]");
-    AnsiConsole.MarkupLine("[bold green]You can talk to the chat model and it will respond as a pirate![/]");
+    AnsiConsole.MarkupLine("[bold green]The star wars assistant is here to help you![/]");
     AnsiConsole.MarkupLine("[bold green] - Use /clear to clear the session[/]");
     AnsiConsole.MarkupLine("[bold green] - Use /q to exit[/]");
 }

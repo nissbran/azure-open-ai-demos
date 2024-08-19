@@ -1,61 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Encodings.Web;
-using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using OpenAI.Chat;
+using Microsoft.SemanticKernel;
 using Serilog;
 
-namespace Demo2;
+namespace Demo4;
 
-public class SwapiShipApiFunction : IGptFunction
+public class SwapiShipApiPlugin
 {
     private readonly HttpClient _httpClient;
     private const string BaseUrl = "https://swapi.dev/api/";
-    public const string FunctionName = "call_starwars_api";
 
-    public SwapiShipApiFunction()
+    public SwapiShipApiPlugin()
     {
         _httpClient = new HttpClient() { BaseAddress = new Uri(BaseUrl) };
     }
 
-    public ChatTool GetToolDefinition()
+    [KernelFunction("get_ship_information")]
+    [Description("Gets Star Wars starship information.")]
+    [return: Description("An array of ship information")]
+    public async Task<string> GetShipInformation(SwapiShipApiFunctionParameters parameters)
     {
-        return ChatTool.CreateFunctionTool(
-            FunctionName, 
-            "Gets Star Wars starship information.", 
-            BinaryData.FromObjectAsJson(
-                new
-                {
-                    Type = "object",
-                    Properties = new
-                    {
-                        ship_name = new
-                        {
-                            Type = "string",
-                            Description = "The name of the ship, e.g. CR90 corvette",
-                        }
-                    },
-                    Required = new[] { "ship_name" },
-                }, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase })
-        );
-    }
-
-    public async Task<string> CallStarWarsShipApi(SwapiShipApiFunctionParameters parameters)
-    {
-        try
-        {
-            var response = await _httpClient.GetFromJsonAsync<SwapiResponse>($"starships?search={UrlEncoder.Default.Encode(parameters.ShipName)}");
-            return response.count == 0 ? "No starship found with that name." : ToGptReadable(response.results[0]);
-        }
-        catch (Exception e)
-        {
-            Log.Error(e, "Failed to call Star Wars API");
-            return "No starship found with that name.";
-        }
+        Log.Verbose("Searching for starship with name {ShipName}", parameters.ShipName);
+        var response = await _httpClient.GetFromJsonAsync<SwapiResponse>($"starships?search={UrlEncoder.Default.Encode(parameters.ShipName)}");
+        var ship = response.count == 0 ? "No starship found with that name." : ToGptReadable(response.results[0]);
+        Log.Verbose("Returning ship information: {Ship}", ship);
+        return ship;
     }
 
     private static string ToGptReadable(StarShip starShip)
@@ -68,6 +43,7 @@ public class SwapiShipApiFunction : IGptFunction
     public class SwapiShipApiFunctionParameters
     {
         [JsonPropertyName("ship_name")] 
+        [Description("The name of the ship, e.g. CR90 corvette")]
         public string ShipName { get; set; }
     }
 

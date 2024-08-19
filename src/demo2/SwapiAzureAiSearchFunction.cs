@@ -9,6 +9,9 @@ using Azure.AI.OpenAI;
 using Azure.Search.Documents;
 using Azure.Search.Documents.Models;
 using Microsoft.Extensions.Configuration;
+using OpenAI;
+using OpenAI.Chat;
+using OpenAI.Embeddings;
 using Serilog;
 
 namespace Demo2;
@@ -18,43 +21,44 @@ public class SwapiAzureAiSearchFunction : IGptFunction
     private readonly SearchClient _searchClient;
     private readonly string _model;
     private readonly OpenAIClient _client;
+    private readonly EmbeddingClient _embeddingClient;
     public const string FunctionName = "call_vehicle_search";
 
     public SwapiAzureAiSearchFunction(IConfiguration configuration)
     {
-        _searchClient = new SearchClient(new Uri(configuration["AzureCognitiveSearch:Endpoint"]), "swapi-vehicle-index", new AzureKeyCredential(configuration["AzureCognitiveSearch:ApiKey"]));
+        _searchClient = new SearchClient(new Uri(configuration["AzureAISearch:Endpoint"]), "swapi-vehicle-index", new AzureKeyCredential(configuration["AzureAISearch:ApiKey"]));
         _model = configuration["AzureOpenAI:EmbeddingModel"];
-        _client = new OpenAIClient(new Uri(configuration["AzureOpenAI:Endpoint"]), new AzureKeyCredential(configuration["AzureOpenAI:ApiKey"]));
+        _client = new AzureOpenAIClient(new Uri(configuration["AzureOpenAI:Endpoint"]), new AzureKeyCredential(configuration["AzureOpenAI:ApiKey"]));
+        _embeddingClient = _client.GetEmbeddingClient(_model);
     }
 
-    public FunctionDefinition GetFunctionDefinition()
+    public ChatTool GetToolDefinition()
     {
-        return new FunctionDefinition
+        return ChatTool.CreateFunctionTool(FunctionName, "Searches for a vehicle in Star Wars.", GetFunctionParameters());
+    }
+
+    private BinaryData GetFunctionParameters()
+    {
+        return BinaryData.FromObjectAsJson(new
         {
-            Name = FunctionName,
-            Description = "Searches for a vehicle in Star Wars.",
-            Parameters = BinaryData.FromObjectAsJson(
-                new
+            Type = "object",
+            Properties = new
+            {
+                search_query = new
                 {
-                    Type = "object",
-                    Properties = new
-                    {
-                        search_query = new
-                        {
-                            Type = "string",
-                            Description = "The search query",
-                        }
-                    },
-                    Required = new[] { "search_query" },
-                }, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase })
-        };
+                    Type = "string",
+                    Description = "The search query",
+                }
+            },
+            Required = new[] { "search_query" },
+        }, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
     }
 
     public async Task<string> GetVehicles(SwapiAzureAiSearchFunctionParameters parameters)
     {
         Log.Information("Searching for vehicles with query {SearchQuery}", parameters.SearchQuery);
         
-        var embeddingsResult = await _client.GetEmbeddingsAsync(new EmbeddingsOptions(_model, new []{parameters.SearchQuery}));
+        var embeddingsResult = await _embeddingClient.GenerateEmbeddingAsync(parameters.SearchQuery);
 
         var searchResponse = await _searchClient.SearchAsync<VehicleSearchResult>(parameters.SearchQuery, new SearchOptions()
         {
@@ -63,7 +67,7 @@ public class SwapiAzureAiSearchFunction : IGptFunction
             {
                 Queries =
                 {
-                    new VectorizedQuery(embeddingsResult.Value.Data[0].Embedding)
+                    new VectorizedQuery(embeddingsResult.Value.Vector)
                     {
                         KNearestNeighborsCount = 3,
                         Fields = { "summary_vector" }

@@ -1,6 +1,6 @@
-# Demo3
+# Demo4
 
-Azure OpenAI and RAG integration with Assistant Api. Function calling with Azure AI Search.
+Azure OpenAI and RAG integration using Semantic Kernel. Plugin calling handled by SK.
 
 ## To run
 

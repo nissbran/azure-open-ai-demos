@@ -20,8 +20,8 @@ public class SwapiVehicleSearchIndexer
 
     public SwapiVehicleSearchIndexer(IConfiguration configuration)
     {
-        var endpoint = new Uri(configuration["AzureCognitiveSearch:Endpoint"]);
-        var credential = new AzureKeyCredential(configuration["AzureCognitiveSearch:ApiKey"]);
+        var endpoint = new Uri(configuration["AzureAISearch:Endpoint"]);
+        var credential = new AzureKeyCredential(configuration["AzureAISearch:ApiKey"]);
         _searchClient = new SearchClient(endpoint, IndexName, credential);
     }
 

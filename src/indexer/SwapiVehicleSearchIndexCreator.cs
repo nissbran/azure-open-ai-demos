@@ -13,12 +13,12 @@ public class SwapiVehicleSearchIndexCreator
     private const string IndexName = "swapi-vehicle-index";
     private const string VectorConfigName = "summary-vector-config";
     private const string AlgorithmConfigName = "summary-alg-config";
-    private const int ModelDimensions = 1536;
+    private const int ModelDimensions = 3072;
 
     public SwapiVehicleSearchIndexCreator(IConfiguration configuration)
     {
-        var endpoint = new Uri(configuration["AzureCognitiveSearch:Endpoint"]);
-        var credential = new AzureKeyCredential(configuration["AzureCognitiveSearch:ApiKey"]);
+        var endpoint = new Uri(configuration["AzureAISearch:Endpoint"]);
+        var credential = new AzureKeyCredential(configuration["AzureAISearch:ApiKey"]);
         _indexClient = new SearchIndexClient(endpoint, credential);
     }
 

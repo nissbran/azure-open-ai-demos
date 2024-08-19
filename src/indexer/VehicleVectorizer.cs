@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Azure;
 using Azure.AI.OpenAI;
 using Microsoft.Extensions.Configuration;
+using OpenAI;
+using OpenAI.Embeddings;
 using Serilog;
 
 namespace SwapiIndexer;
@@ -12,23 +13,25 @@ namespace SwapiIndexer;
 public class VehicleVectorizer
 {
     private readonly OpenAIClient _client;
+    private readonly EmbeddingClient _embeddingClient;
     private readonly string _model;
     private long _usedTokens;
 
     public VehicleVectorizer(IConfiguration configuration)
     {
         _model = configuration["AzureOpenAI:EmbeddingModel"];
-        _client = new OpenAIClient(
+        _client = new AzureOpenAIClient(
             new Uri(configuration["AzureOpenAI:Endpoint"]),
             new AzureKeyCredential(configuration["AzureOpenAI:ApiKey"]));
+        _embeddingClient = _client.GetEmbeddingClient(_model);
     }
 
     private async Task<ReadOnlyMemory<float>> GenerateEmbeddings(string text)
     {
-        var response = await _client.GetEmbeddingsAsync(new EmbeddingsOptions(_model, new []{text}));
+        var response = await _embeddingClient.GenerateEmbeddingAsync(text);
     
-        _usedTokens = response.Value.Usage.TotalTokens;
-        return response.Value.Data.First().Embedding;
+       // _usedTokens = response.Value.Vector;
+        return response.Value.Vector;
     }
     
     public async Task Vectorize(List<Vehicle> vehicles)

@@ -10,6 +10,8 @@ using Azure.AI.OpenAI.Assistants;
 using Azure.Search.Documents;
 using Azure.Search.Documents.Models;
 using Microsoft.Extensions.Configuration;
+using OpenAI;
+using OpenAI.Embeddings;
 using Serilog;
 
 namespace Demo3;
@@ -19,13 +21,15 @@ public class SwapiAzureAiSearchFunction : IGptFunction
     private readonly SearchClient _searchClient;
     private readonly string _model;
     private readonly OpenAIClient _client;
+    private readonly EmbeddingClient _embeddingClient;
     private const string FunctionName = "call_vehicle_search";
 
     public SwapiAzureAiSearchFunction(IConfiguration configuration)
     {
-        _searchClient = new SearchClient(new Uri(configuration["AzureCognitiveSearch:Endpoint"]), "swapi-vehicle-index", new AzureKeyCredential(configuration["AzureCognitiveSearch:ApiKey"]));
+        _searchClient = new SearchClient(new Uri(configuration["AzureAISearch:Endpoint"]), "swapi-vehicle-index", new AzureKeyCredential(configuration["AzureAISearch:ApiKey"]));
         _model = configuration["AzureOpenAI:EmbeddingModel"];
-        _client = new OpenAIClient(new Uri(configuration["AzureOpenAI:Endpoint"]), new AzureKeyCredential(configuration["AzureOpenAI:ApiKey"]));
+        _client = new AzureOpenAIClient(new Uri(configuration["AzureOpenAI:Endpoint"]), new AzureKeyCredential(configuration["AzureOpenAI:ApiKey"]));
+        _embeddingClient = _client.GetEmbeddingClient(_model);
     }
 
     public FunctionToolDefinition GetFunctionDefinition()
@@ -52,9 +56,9 @@ public class SwapiAzureAiSearchFunction : IGptFunction
     {
         Log.Verbose("Searching for vehicles with query {SearchQuery}", parameters.SearchQuery);
         
-        var embeddingsResult = await _client.GetEmbeddingsAsync(new EmbeddingsOptions(_model, new []{parameters.SearchQuery}));
+        var embeddingsResult = await _embeddingClient.GenerateEmbeddingAsync(parameters.SearchQuery);
 
-        Log.Verbose("Embeddings result: {EmbeddingsResult}", embeddingsResult.Value.Data[0].Embedding);
+        Log.Verbose("Embeddings result: {EmbeddingsResult}", embeddingsResult.Value.Vector);
         
         var searchResponse = await _searchClient.SearchAsync<VehicleSearchResult>(parameters.SearchQuery, new SearchOptions()
         {
@@ -63,7 +67,7 @@ public class SwapiAzureAiSearchFunction : IGptFunction
             {
                 Queries =
                 {
-                    new VectorizedQuery(embeddingsResult.Value.Data[0].Embedding)
+                    new VectorizedQuery(embeddingsResult.Value.Vector)
                     {
                         KNearestNeighborsCount = 3,
                         Fields = { "summary_vector" }

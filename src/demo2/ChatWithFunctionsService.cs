@@ -1,12 +1,14 @@
 ﻿using System;
+using System.ClientModel;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Azure;
 using Azure.AI.OpenAI;
 using Microsoft.Extensions.Configuration;
+using OpenAI;
+using OpenAI.Chat;
 using Serilog;
 
 namespace Demo2;
@@ -14,12 +16,14 @@ namespace Demo2;
 public class ChatWithFunctionsService
 {
     private readonly OpenAIClient _client;
+    private readonly ChatClient _chatClient;
     private readonly string _model;
 
-    private readonly ChatRequestMessage _systemMessage = new ChatRequestSystemMessage(
+    private readonly ChatMessage _systemMessage = new SystemChatMessage(
         "You are a helpful assistant that helps find information about starships and vehicles in Star Wars.");
-    private readonly List<ChatRequestMessage> _memory = new();
-    
+
+    private readonly List<ChatMessage> _memory = new();
+
     private readonly SwapiShipApiFunction _swapiApiFunction = new();
     private readonly SwapiAzureAiSearchFunction _swapiAzureAiSearchFunction;
 
@@ -28,8 +32,9 @@ public class ChatWithFunctionsService
         var apiKey = configuration["AzureOpenAI:ApiKey"];
         var endpoint = configuration["AzureOpenAI:Endpoint"];
         _model = configuration["AzureOpenAI:ChatModel"];
-        _client = new OpenAIClient(new Uri(endpoint), new AzureKeyCredential(apiKey));
+        _client = new AzureOpenAIClient(new Uri(endpoint), new ApiKeyCredential(apiKey));
         _swapiAzureAiSearchFunction = new SwapiAzureAiSearchFunction(configuration);
+        _chatClient = _client.GetChatClient(_model);
     }
 
     public void StartNewSession()
@@ -43,76 +48,86 @@ public class ChatWithFunctionsService
     {
         try
         {
-            Log.Verbose("Message sent to completions api");
-            _memory.Add(new ChatRequestUserMessage(message));
-            var options = new ChatCompletionsOptions(_model, _memory);
-            options.Functions.Add(_swapiApiFunction.GetFunctionDefinition());
-            options.Functions.Add(_swapiAzureAiSearchFunction.GetFunctionDefinition());
-            
-            var completionsResponse = await _client.GetChatCompletionsAsync(options);
-            
-            var functionCallWasMade = await HandleFunctionsResponseMessage(completionsResponse);
-            
-            Log.Verbose("Message received from completions api with function call: {FunctionCallWasMade}", functionCallWasMade);
-            if (functionCallWasMade)
+            bool requiresAction;
+            string response = string.Empty;
+
+            do
             {
-                Log.Verbose("Function call was made, calling completions api again");
-                var optionsFunctionCall = new ChatCompletionsOptions(_model, _memory);
-                optionsFunctionCall.Functions.Add(_swapiApiFunction.GetFunctionDefinition());
-                optionsFunctionCall.Functions.Add(_swapiAzureAiSearchFunction.GetFunctionDefinition());
-                completionsResponse = await _client.GetChatCompletionsAsync(optionsFunctionCall);
-                
-                // Check if function call was made again if both functions were called
-                var functionCallWasMadeAgain = await HandleFunctionsResponseMessage(completionsResponse);
-                if (functionCallWasMadeAgain)
+                requiresAction = false;
+
+                Log.Verbose("Message sent to completions api");
+
+                _memory.Add(new UserChatMessage(message));
+                var options = new ChatCompletionOptions();
+                options.Tools.Add(_swapiApiFunction.GetToolDefinition());
+                //options.Tools.Add(_swapiAzureAiSearchFunction.GetToolDefinition());
+
+                var chatCompletionResult = await _chatClient.CompleteChatAsync(_memory, options);
+
+                switch (chatCompletionResult.Value.FinishReason)
                 {
-                    Log.Verbose("Function call was made, calling completions api again");
-                    var optionsFunctionCall2 = new ChatCompletionsOptions(_model, _memory);
-                    optionsFunctionCall2.Functions.Add(_swapiApiFunction.GetFunctionDefinition());
-                    optionsFunctionCall2.Functions.Add(_swapiAzureAiSearchFunction.GetFunctionDefinition());
-                    completionsResponse = await _client.GetChatCompletionsAsync(optionsFunctionCall2);
+                    case ChatFinishReason.Stop:
+                    {
+                        _memory.Add(new AssistantChatMessage(chatCompletionResult));
+                        response = chatCompletionResult.Value.Content.First().Text;
+                        break;
+                    }
+
+                    case ChatFinishReason.ToolCalls:
+                    {
+                        Log.Verbose("Function call was made, calling completions api again");
+                        _memory.Add(new AssistantChatMessage(chatCompletionResult));
+
+                        foreach (var toolCall in chatCompletionResult.Value.ToolCalls)
+                        {
+                            switch (toolCall.FunctionName)
+                            {
+                                case SwapiShipApiFunction.FunctionName:
+                                {
+                                    Log.Verbose("Calling Star Wars ship api function with parameters: {Arguments}", toolCall.FunctionArguments);
+                                    var parameters = JsonSerializer.Deserialize<SwapiShipApiFunction.SwapiShipApiFunctionParameters>(toolCall.FunctionArguments);
+                                    var ship = await _swapiApiFunction.CallStarWarsShipApi(parameters);
+                                    _memory.Add(new ToolChatMessage(toolCall.Id, ship));
+                                    break;
+                                }
+                                case SwapiAzureAiSearchFunction.FunctionName:
+                                {
+                                    Log.Verbose("Calling Star Wars Azure AI search function with parameters: {Arguments}", toolCall.FunctionArguments);
+                                    var parameters = JsonSerializer.Deserialize<SwapiAzureAiSearchFunction.SwapiAzureAiSearchFunctionParameters>(toolCall.FunctionArguments);
+                                    var vehicles = await _swapiAzureAiSearchFunction.GetVehicles(parameters);
+                                    _memory.Add(new ToolChatMessage(toolCall.Id, vehicles));
+                                    break;
+                                }
+                                default:
+                                    throw new NotImplementedException("Unknown function call");
+                            }
+                        }
+
+                        Log.Verbose("Function call was made, calling completions api again");
+                        requiresAction = true;
+                        break;
+                    }
+
+                    case ChatFinishReason.Length:
+                        throw new NotImplementedException("Incomplete model output due to MaxTokens parameter or token limit exceeded.");
+
+                    case ChatFinishReason.ContentFilter:
+                        throw new NotImplementedException("Omitted content due to a content filter flag.");
+
+                    case ChatFinishReason.FunctionCall:
+                        throw new NotImplementedException("Deprecated in favor of tool calls.");
+
+                    default:
+                        throw new NotImplementedException(chatCompletionResult.Value.FinishReason.ToString());
                 }
-            }
-            var responseMessage = completionsResponse.Value.Choices[0].Message.Content;
-            _memory.Add(new ChatRequestAssistantMessage(responseMessage));
-            return responseMessage;
+            } while (requiresAction);
+
+            return response;
         }
         catch (Exception e)
         {
             Log.Error(e, "Failed to get chat completions");
             return "I'm sorry, I can't do that right now.";
         }
-    }
-
-    private async Task<bool> HandleFunctionsResponseMessage(Response<ChatCompletions> completionsResponse)
-    {
-        foreach (var chatChoice in completionsResponse.Value.Choices)
-        {
-            if (chatChoice.FinishReason == CompletionsFinishReason.FunctionCall)
-            {
-                var functionResponse = chatChoice.Message.FunctionCall;
-                switch (functionResponse.Name)
-                {
-                    case SwapiShipApiFunction.FunctionName:
-                    {
-                        Log.Verbose("Calling Star Wars ship api function with parameters: {Arguments}", functionResponse.Arguments);
-                        var parameters = JsonSerializer.Deserialize<SwapiShipApiFunction.SwapiShipApiFunctionParameters>(functionResponse.Arguments);
-                        var ship = await _swapiApiFunction.CallStarWarsShipApi(parameters);
-                        _memory.Add(new ChatRequestFunctionMessage(SwapiShipApiFunction.FunctionName, ship));
-                        return true;
-                    }
-                    case SwapiAzureAiSearchFunction.FunctionName:
-                    {
-                        Log.Verbose("Calling Star Wars Azure AI search function with parameters: {Arguments}", functionResponse.Arguments);
-                        var parameters = JsonSerializer.Deserialize<SwapiAzureAiSearchFunction.SwapiAzureAiSearchFunctionParameters>(functionResponse.Arguments);
-                        var vehicles = await _swapiAzureAiSearchFunction.GetVehicles(parameters);
-                        _memory.Add(new ChatRequestFunctionMessage(SwapiAzureAiSearchFunction.FunctionName, vehicles));
-                        return true;
-                    }
-                }
-            }
-        }
-
-        return false;
     }
 }

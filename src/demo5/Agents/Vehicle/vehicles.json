@@ -1,0 +1,32 @@
+[
+  {
+    "title": "Imperial Speeder Bike",
+    "summary": "Imperial Speeder Bike is a vehicle class speeder with model 74-Z speeder bike and made by Aratech Repulsor Company. It costs 8000. It is 3 in length and max speed of 360. It has a crew of 1 and can carry 1 passengers. It has a cargo capacity of 4 and can go 1 day without refueling.",
+    "model": "74-Z speeder bike",
+    "manufacturer": "Aratech Repulsor Company"
+  },
+  {
+    "title": "Sith speeder",
+    "summary": "Sith speeder is a vehicle class speeder with model FC-20 speeder bike and made by Razalon. It costs 4000. It is 1.5 in length and max speed of 180. It has a crew of 1 and can carry 0 passengers. It has a cargo capacity of 2 and can go unknown without refueling.",
+    "model": "FC-20 speeder bike",
+    "manufacturer": "Razalon"
+  },
+  {
+    "title": "Snowspeeder",
+    "summary": "Snowspeeder is a vehicle class airspeeder with model t-47 airspeeder and made by Incom corporation. It costs unknown. It is 4.5 in length and max speed of 650. It has a crew of 2 and can carry 0 passengers. It has a cargo capacity of 10 and can go none without refueling.",
+    "model": "t-47 airspeeder",
+    "manufacturer": "Incom corporation"
+  },
+  {
+    "title": "Flitknot speeder",
+    "summary": "Flitknot speeder is a vehicle class speeder with model Flitknot speeder and made by Huppla Pasa Tisc Shipwrights Collective. It costs 8000. It is 2 in length and max speed of 634. It has a crew of 1 and can carry 0 passengers. It has a cargo capacity of unknown and can go unknown without refueling.",
+    "model": "Flitknot speeder",
+    "manufacturer": "Huppla Pasa Tisc Shipwrights Collective"
+  },
+  {
+    "title": "Raddaugh Gnasp fluttercraft",
+    "summary": "Raddaugh Gnasp fluttercraft is a vehicle class air speeder with model Raddaugh Gnasp fluttercraft and made by Appazanna Engineering Works. It costs 14750. It is 7 in length and max speed of 310. It has a crew of 2 and can carry 0 passengers. It has a cargo capacity of 20 and can go none without refueling.",
+    "model": "Raddaugh Gnasp fluttercraft",
+    "manufacturer": "Appazanna Engineering Works"
+  }
+]

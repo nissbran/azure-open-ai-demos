@@ -1,0 +1,38 @@
+---
+name: Vehicle Agent
+description: This vehicle agent takes a request from a user to find information about star wars vehicles.
+model:
+  api: chat
+  configuration:
+    type: azure_openai
+  parameters:
+    max_tokens: 2000
+sample:
+  vehicles: ${file:vehicles.json}
+inputs: 
+  instructions:
+    type: string
+    default: "How is the fastest star wars vehicle?"
+  vehicles:
+    type: string
+    default: " "
+---
+system:
+
+You are a star wars vehicles expert. Always search for the vehicle information before you provide the answer.
+
+user:
+{{instructions}}
+
+
+{% for item in vehicles %}
+
+Title: {{item.title}} 
+
+Description: {{item.summary}}
+
+Model: {{item.model}}
+
+Manufacturer: {{item.manufacturer}}
+
+{% endfor %}

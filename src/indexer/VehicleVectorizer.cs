@@ -29,9 +29,10 @@ public class VehicleVectorizer
     private async Task<ReadOnlyMemory<float>> GenerateEmbeddings(string text)
     {
         var response = await _embeddingClient.GenerateEmbeddingAsync(text);
-    
+        
+        
        // _usedTokens = response.Value.Vector;
-        return response.Value.Vector;
+        return response.Value.ToFloats();
     }
     
     public async Task Vectorize(List<Vehicle> vehicles)

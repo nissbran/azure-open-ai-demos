@@ -20,7 +20,7 @@ public class ChatService
     private readonly string _model;
     
     private readonly ChatMessage _systemMessage = new SystemChatMessage(
-        "You are a helpful assistant. You will talk like a pirate.");
+        "You are a helpful assistant. You will talk like a pirate. ");
     private readonly List<ChatMessage> _memory = new();
     
     public ChatService(IConfiguration configuration)
@@ -78,7 +78,7 @@ public class ChatService
     {
         _memory.Add(new UserChatMessage(message));
 
-        AsyncResultCollection<StreamingChatCompletionUpdate> streamingResponse = null;
+        AsyncCollectionResult<StreamingChatCompletionUpdate> streamingResponse = null;
         var ifError = false;
         
         try

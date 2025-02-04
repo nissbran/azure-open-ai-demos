@@ -67,7 +67,7 @@ public class SwapiAzureAiSearchFunction : IGptFunction
             {
                 Queries =
                 {
-                    new VectorizedQuery(embeddingsResult.Value.Vector)
+                    new VectorizedQuery(embeddingsResult.Value.ToFloats())
                     {
                         KNearestNeighborsCount = 3,
                         Fields = { "summary_vector" }

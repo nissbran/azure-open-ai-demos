@@ -11,7 +11,7 @@ namespace Demo4;
 public class ChatWithSemanticKernelService
 {
     private const string SystemMessage = "You are a helpful assistant that helps find information about starships and vehicles in Star Wars.";
-    private readonly ChatHistory _history = new();
+    private readonly ChatHistory _history = [];
     private readonly Kernel _kernel;
     private readonly IChatCompletionService _chatCompletionService;
     private readonly OpenAIPromptExecutionSettings _openAIPromptExecutionSettings = new() 
@@ -21,9 +21,9 @@ public class ChatWithSemanticKernelService
 
     public ChatWithSemanticKernelService(IConfiguration configuration)
     {
-        var model = configuration["AzureOpenAI:ChatModel"];
-        var apiKey = configuration["AzureOpenAI:ApiKey"];
-        var endpoint = configuration["AzureOpenAI:Endpoint"];
+        var model = configuration["AzureOpenAI:ChatModel"] ?? throw new ArgumentNullException(nameof(configuration), "ChatModel configuration is missing.");
+        var apiKey = configuration["AzureOpenAI:ApiKey"] ?? throw new ArgumentNullException(nameof(configuration), "ApiKey configuration is missing.");
+        var endpoint = configuration["AzureOpenAI:Endpoint"] ?? throw new ArgumentNullException(nameof(configuration), "Endpoint configuration is missing.");
         var builder = Kernel.CreateBuilder().AddAzureOpenAIChatCompletion(model, endpoint, apiKey);
         
         _kernel = builder.Build();

@@ -1,0 +1,32 @@
+---
+name: Starship Agent
+description: This starship agent takes a request from a user to find information about star wars starships.
+model:
+  api: chat
+  configuration:
+    type: azure_openai
+  parameters:
+    max_tokens: 2000
+sample:
+  starships: ${file:starships.json}
+  instructions: "What is the biggest star wars ship?"
+inputs: 
+  instructions:
+    type: string
+    default: " "
+  starships:
+    type: string
+    default: " "
+---
+system:
+
+You are a star wars starship expert. Always search for the starship information before you provide the answer.
+
+user:
+{{instructions}}
+
+{% for item in starships %}
+
+{{item.summary}}
+
+{% endfor %}

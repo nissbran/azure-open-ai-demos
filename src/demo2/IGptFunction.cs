@@ -1,5 +1,4 @@
-﻿using OpenAI.Assistants;
-using OpenAI.Chat;
+﻿using OpenAI.Chat;
 
 namespace Demo2;
 

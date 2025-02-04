@@ -58,7 +58,7 @@ public class SwapiAzureAiSearchFunction : IGptFunction
         
         var embeddingsResult = await _embeddingClient.GenerateEmbeddingAsync(parameters.SearchQuery);
 
-        Log.Verbose("Embeddings result: {EmbeddingsResult}", embeddingsResult.Value.Vector);
+        Log.Verbose("Embeddings result: {EmbeddingsResult}", embeddingsResult.Value.ToFloats());
         
         var searchResponse = await _searchClient.SearchAsync<VehicleSearchResult>(parameters.SearchQuery, new SearchOptions()
         {
@@ -67,7 +67,7 @@ public class SwapiAzureAiSearchFunction : IGptFunction
             {
                 Queries =
                 {
-                    new VectorizedQuery(embeddingsResult.Value.Vector)
+                    new VectorizedQuery(embeddingsResult.Value.ToFloats())
                     {
                         KNearestNeighborsCount = 3,
                         Fields = { "summary_vector" }

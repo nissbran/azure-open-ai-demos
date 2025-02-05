@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Demo5.Agents.Conversation;
 using Demo5.Agents.Starship;
@@ -103,7 +104,7 @@ public class ChatWithAgentsService
         }
     }
 
-    public async Task<string> TypeMessageAsync(string message)
+    public async Task<string> TypeMessageAsync(string message, CancellationToken cancellationToken = default)
     {
         try
         {
@@ -111,7 +112,7 @@ public class ChatWithAgentsService
            
             _chat.AddChatMessage(new ChatMessageContent(AuthorRole.User, message));
 
-            await foreach (var messageContent in _chat.InvokeAsync())
+            await foreach (var messageContent in _chat.InvokeAsync(cancellationToken))
             {
                 content.Append(messageContent);
             }

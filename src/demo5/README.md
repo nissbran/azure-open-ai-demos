@@ -28,3 +28,12 @@ Then run the application.
 ## To get verbose logging
 
 Switch the `MinimumLevel` to `Verbose` in the `appsettings.local.json` file.
+
+
+## To get tracing export to Aspire Dashboard
+
+Start the Aspire Dashboard in standalone mode and run the application. The traces will be exported to the Aspire Dashboard.
+
+```bash
+docker run --rm -it -p 18888:18888 -p 4317:18889 -d --name aspire-dashboard mcr.microsoft.com/dotnet/aspire-dashboard:9.0
+```

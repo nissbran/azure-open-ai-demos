@@ -1,11 +1,17 @@
+using System;
+using System.Diagnostics;
+using System.Threading;
 using Demo5;
 using Microsoft.Extensions.Configuration;
+using OpenTelemetry;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using Serilog;
 using Serilog.Sinks.SystemConsole.Themes;
-using Spectre.Console;
 
 var configuration = new ConfigurationBuilder()
     .AddEnvironmentVariables()
+    .AddUserSecrets<Program>()
     .AddJsonFile("appsettings.json", false)
     .AddJsonFile("appsettings.local.json", true)
     .Build();
@@ -16,46 +22,35 @@ Log.Logger = new LoggerConfiguration()
     .WriteTo.Console(theme: AnsiConsoleTheme.Sixteen)
     .CreateLogger();
 
+// Add telemetry
+AppContext.SetSwitch("Microsoft.SemanticKernel.Experimental.GenAI.EnableOTelDiagnosticsSensitive", true);
+
+var resourceBuilder = ResourceBuilder
+    .CreateDefault()
+    .AddService("Demo5");
+
+using var traceProvider = Sdk.CreateTracerProviderBuilder()
+    .SetResourceBuilder(resourceBuilder)
+    .AddHttpClientInstrumentation()
+    .AddSource("Microsoft.SemanticKernel*", "Demo5")
+    .AddOtlpExporter()
+    .Build();
+
+var activitySource = new ActivitySource("Demo5");
+
 // Create chat service
 var chatService = new ChatWithAgentsService(configuration);
-string botName = "Star Wars Assistant";
+var consoleChat = new ConsoleChat(chatService, activitySource);
 
 // Run chat
-WriteWelcomeMessage();
-
-chatService.StartNewSession();
-
-while (true)
+var cts = new CancellationTokenSource();
+Console.CancelKeyPress += (s, e) =>
 {
-    var message = AnsiConsole.Ask<string>("[bold blue]User:[/] ");
-    switch (message)
-    {
-        case "/clear":
-            Log.Verbose("Clearing the session");
-            AnsiConsole.Clear();
-            chatService.StartNewSession();
-            botName = "Star Wars Assistant";
-            WriteWelcomeMessage();
-            break;
-        case "/q":
-            AnsiConsole.MarkupLine($"[bold red]{botName}:[/] Goodbye!");
-            return;
-        case "/print":
-            await chatService.PrintTheChatAsync();
-            break;
-        default:
-            var response = await chatService.TypeMessageAsync(message);
-            AnsiConsole.Markup($"[bold red]{botName}:[/] ");
-            AnsiConsole.WriteLine(string.IsNullOrEmpty(response) ? "I'm sorry, I can't do that right now." : response);
-            break;
-    }
-}
+    cts.Cancel();
+    e.Cancel = true;
+};
 
-void WriteWelcomeMessage()
+while (await consoleChat.StartChatAsync(cts.Token) == ExitReason.ClearRequested)
 {
-    AnsiConsole.MarkupLine("[bold green]Welcome to the chat![/]");
-    AnsiConsole.MarkupLine("[bold green]The star wars assistant is here to help you![/]");
-    AnsiConsole.MarkupLine("[bold green] - Use /clear to clear the session[/]");
-    AnsiConsole.MarkupLine("[bold green] - Use /print to print the chat history[/]");
-    AnsiConsole.MarkupLine("[bold green] - Use /q to exit[/]");
+    // Loop
 }

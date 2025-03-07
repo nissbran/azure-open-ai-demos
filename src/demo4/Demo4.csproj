@@ -10,9 +10,9 @@
     </ItemGroup>
     
     <ItemGroup>
-        <PackageReference Include="Microsoft.SemanticKernel" Version="1.35.0" />
-        <PackageReference Include="Microsoft.SemanticKernel.Connectors.AzureOpenAI" Version="1.35.0" />
-        <PackageReference Include="Microsoft.SemanticKernel.Connectors.AzureAISearch" Version="1.35.0-preview" />
+        <PackageReference Include="Microsoft.SemanticKernel" Version="1.40.1" />
+        <PackageReference Include="Microsoft.SemanticKernel.Connectors.AzureOpenAI" Version="1.40.1" />
+        <PackageReference Include="Microsoft.SemanticKernel.Connectors.AzureAISearch" Version="1.40.1-preview" />
         <PackageReference Include="Azure.Search.Documents" Version="11.6.0" />
     </ItemGroup>
 

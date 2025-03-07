@@ -60,7 +60,7 @@ public class ChatWithFunctionsService
                 _memory.Add(new UserChatMessage(message));
                 var options = new ChatCompletionOptions();
                 options.Tools.Add(_swapiApiFunction.GetToolDefinition());
-                //options.Tools.Add(_swapiAzureAiSearchFunction.GetToolDefinition());
+                options.Tools.Add(_swapiAzureAiSearchFunction.GetToolDefinition());
 
                 var chatCompletionResult = await _chatClient.CompleteChatAsync(_memory, options);
 

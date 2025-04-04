@@ -78,7 +78,7 @@ public class ChatWithSemanticKernelService
                 Id = "starwars_info",
                 Name = "Star Wars Info",
                 TransportType = TransportTypes.Sse,
-                Location = _mcpServerUri + "/see",
+                Location = _mcpServerUri + "sse",
                     
             }).ConfigureAwait(false);
         var tools = await _mcpClient.ListToolsAsync().ConfigureAwait(false);

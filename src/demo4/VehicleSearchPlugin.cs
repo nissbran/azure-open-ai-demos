@@ -1,34 +1,25 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Azure;
-using Azure.AI.OpenAI;
 using Azure.Search.Documents;
 using Azure.Search.Documents.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.SemanticKernel;
-using OpenAI;
-using OpenAI.Embeddings;
 using Serilog;
 
 namespace Demo4;
 
-public class SwapiAzureAiSearchPlugin
+public class VehicleSearchPlugin
 {
     private readonly SearchClient _searchClient;
-    private readonly string _model;
-    private readonly OpenAIClient _client;
-    private readonly EmbeddingClient _embeddingClient;
 
-    public SwapiAzureAiSearchPlugin(IConfiguration configuration)
+    public VehicleSearchPlugin(IConfiguration configuration)
     {
         _searchClient = new SearchClient(new Uri(configuration["AzureAISearch:Endpoint"]), "swapi-vehicle-index", new AzureKeyCredential(configuration["AzureAISearch:ApiKey"]));
-        _model = configuration["AzureOpenAI:EmbeddingModel"];
-        _client = new AzureOpenAIClient(new Uri(configuration["AzureOpenAI:Endpoint"]), new AzureKeyCredential(configuration["AzureOpenAI:ApiKey"]));
-        _embeddingClient = _client.GetEmbeddingClient(_model);
     }
     
     [KernelFunction("call_vehicle_search")]
@@ -79,20 +70,19 @@ public class SwapiAzureAiSearchPlugin
         
             if (result.Count == 0)
             {
-                return "No vehicles found with that name.";
+                return "[]";
             }
-
-            var searchResultBuilder = new StringBuilder();
-
-            searchResultBuilder.AppendLine("Here are the vehicles I found:");
         
-            foreach (var resultPage in result)
-            {
-                Log.Verbose("Search result: {Summary}", resultPage.Document.summary);
-                searchResultBuilder.AppendLine(resultPage.Document.summary);
-            }
-
-            return searchResultBuilder.ToString();
+            var json = JsonSerializer.Serialize(result.Select(searchResult => new VehicleSearchResult(
+                searchResult.Document.title,
+                searchResult.Document.summary,
+                searchResult.Document.model,
+                searchResult.Document.manufacturer
+            )).ToList());
+            
+            Log.Verbose("Search result: {Summary}", json);
+        
+            return json;
         }
         catch (Exception e)
         {
@@ -104,6 +94,7 @@ public class SwapiAzureAiSearchPlugin
     public class SwapiAzureAiSearchFunctionParameters
     {
         [JsonPropertyName("search_query")] 
+        [Description("The search query for the vehicle, e.g. speeder bike")]
         public string SearchQuery { get; set; }
     }
 

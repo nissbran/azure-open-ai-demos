@@ -5,15 +5,19 @@ VisualStudioVersion = 17.5.002.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SwapiIndexer", "src\indexer\SwapiIndexer.csproj", "{498F0D7A-77C0-428D-B7F6-CCD99457C01B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo1", "src\demo1\Demo1.csproj", "{119CD971-CC96-41EC-AE26-C6A98398289B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo1-AzureOpenAI-SDK", "src\demo1\Demo1-AzureOpenAI-SDK.csproj", "{119CD971-CC96-41EC-AE26-C6A98398289B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo2", "src\demo2\Demo2.csproj", "{2502B08E-ADF2-4366-A2AC-ACBDF4F25D91}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo2-FunctionCalling-RAG", "src\demo2\Demo2-FunctionCalling-RAG.csproj", "{2502B08E-ADF2-4366-A2AC-ACBDF4F25D91}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo3", "src\demo3\Demo3.csproj", "{395047CC-01D0-4E30-A4D4-4D9E9E4E23C6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo3-MEAI-FunctionCalling-RAG", "src\demo3\Demo3-MEAI-FunctionCalling-RAG.csproj", "{395047CC-01D0-4E30-A4D4-4D9E9E4E23C6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo4", "src\demo4\Demo4.csproj", "{A7B8AD93-2AB2-4771-AEAC-66DCF0B02BF7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo4-SemanticKernel-RAG", "src\demo4\Demo4-SemanticKernel-RAG.csproj", "{A7B8AD93-2AB2-4771-AEAC-66DCF0B02BF7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo5", "src\demo5\Demo5.csproj", "{F5940065-5926-4115-8367-9E472F8883A2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo5-SemanticKernel-Agents-Otel", "src\demo5\Demo5-SemanticKernel-Agents-Otel.csproj", "{F5940065-5926-4115-8367-9E472F8883A2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "McpToolServer", "src\McpToolServer\McpToolServer.csproj", "{BF72B7D5-7E01-4DF3-8B07-01546892BD06}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo6-Mcp", "src\demo6\Demo6-Mcp.csproj", "{0464A4AE-A93E-491F-B279-304EE98C9342}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +49,14 @@ Global
 		{F5940065-5926-4115-8367-9E472F8883A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F5940065-5926-4115-8367-9E472F8883A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F5940065-5926-4115-8367-9E472F8883A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF72B7D5-7E01-4DF3-8B07-01546892BD06}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF72B7D5-7E01-4DF3-8B07-01546892BD06}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF72B7D5-7E01-4DF3-8B07-01546892BD06}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF72B7D5-7E01-4DF3-8B07-01546892BD06}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0464A4AE-A93E-491F-B279-304EE98C9342}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0464A4AE-A93E-491F-B279-304EE98C9342}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0464A4AE-A93E-491F-B279-304EE98C9342}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0464A4AE-A93E-491F-B279-304EE98C9342}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

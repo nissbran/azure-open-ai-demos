@@ -1,29 +1,50 @@
+using System;
+using System.ClientModel;
+using Azure.AI.OpenAI;
 using Demo3;
+using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Sinks.SystemConsole.Themes;
 using Spectre.Console;
 
-var configuration = new ConfigurationBuilder()
+Console.OutputEncoding = System.Text.Encoding.UTF8;
+
+var builder = Host.CreateApplicationBuilder();
+
+builder.Configuration
     .AddEnvironmentVariables()
     .AddJsonFile("appsettings.json", false)
-    .AddJsonFile("appsettings.local.json", true)
-    .Build();
+    .AddJsonFile("appsettings.local.json", true);
 
-Log.Logger = new LoggerConfiguration()
-    .MinimumLevel.Information()
-    .ReadFrom.Configuration(configuration)
-    .WriteTo.Console(theme: AnsiConsoleTheme.Sixteen)
-    .CreateLogger();
+builder.Services.AddSerilog(configuration =>
+    configuration
+        .MinimumLevel.Information()
+        .ReadFrom.Configuration(builder.Configuration)
+        .WriteTo.Console(theme: AnsiConsoleTheme.Sixteen));
+
+builder.Services.AddSingleton(
+    new AzureOpenAIClient(new Uri(builder.Configuration["AzureOpenAI:Endpoint"]), new ApiKeyCredential(builder.Configuration["AzureOpenAI:ApiKey"])));
+
+builder.Services.AddKeyedChatClient("StarWars", 
+        provider => provider.GetRequiredService<AzureOpenAIClient>().AsChatClient(builder.Configuration["AzureOpenAI:ChatModel"]))
+    .UseFunctionInvocation()
+    .UseLogging();
+builder.Services.AddSingleton<ChatWithFunctionsService>();
 
 // Create chat service
-var chatService = new ChatWithAssistantsService(configuration);
 string botName = "Star Wars Assistant";
 
 // Run chat
+var app = builder.Build();
+
 WriteWelcomeMessage();
 
-await chatService.StartNewAssistantSession();
+var chatService = app.Services.GetRequiredService<ChatWithFunctionsService>();
+
+chatService.StartNewSession();
 
 while (true)
 {
@@ -33,18 +54,13 @@ while (true)
         case "/clear":
             Log.Verbose("Clearing the session");
             AnsiConsole.Clear();
-            await chatService.StartNewAssistantSession();
+            chatService.StartNewSession();
             botName = "Star Wars Assistant";
             WriteWelcomeMessage();
             break;
         case "/q":
             AnsiConsole.MarkupLine($"[bold red]{botName}:[/] Goodbye!");
             return;
-        case "/math":
-            AnsiConsole.MarkupLine("[bold green]Switching to math assistant[/]");
-            botName = "Math Assistant";
-            chatService.SwitchToMathAssistant();
-            break;
         default:
             var response = await chatService.TypeMessageAsync(message);
             AnsiConsole.Markup($"[bold red]{botName}:[/] ");

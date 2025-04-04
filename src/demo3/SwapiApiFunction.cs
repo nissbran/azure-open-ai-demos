@@ -1,18 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Encodings.Web;
-using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using Azure.AI.OpenAI;
-using Azure.AI.OpenAI.Assistants;
+using Microsoft.Extensions.AI;
 using Serilog;
 
 namespace Demo3;
 
-public class SwapiShipApiFunction : IGptFunction
+public class SwapiShipApiFunction
 {
     private readonly HttpClient _httpClient;
     private const string BaseUrl = "https://swapi.dev/api/";
@@ -23,26 +22,12 @@ public class SwapiShipApiFunction : IGptFunction
         _httpClient = new HttpClient() { BaseAddress = new Uri(BaseUrl) };
     }
 
-    public FunctionToolDefinition GetFunctionDefinition()
+    public AITool GetFunctionDefinition()
     {
-        return new FunctionToolDefinition(FunctionName, "Gets Star Wars starship information.", BinaryData.FromObjectAsJson(
-            new
-            {
-                Type = "object",
-                Properties = new
-                {
-                    ship_name = new
-                    {
-                        Type = "string",
-                        Description = "The name of the ship, e.g. CR90 corvette",
-                    }
-                },
-                Required = new[] { "ship_name" },
-            }, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase }));
+        return AIFunctionFactory.Create(GetShipInformation, FunctionName);
     }
 
-    public string GetFunctionName() => FunctionName;
-
+    [Description("Gets Star Wars starship information")]
     public async Task<string> GetShipInformation(SwapiShipApiFunctionParameters parameters)
     {
         Log.Verbose("Searching for starship with name {ShipName}", parameters.ShipName);
@@ -61,7 +46,8 @@ public class SwapiShipApiFunction : IGptFunction
 
     public class SwapiShipApiFunctionParameters
     {
-        [JsonPropertyName("ship_name")] 
+        [JsonPropertyName("ship_name")]
+        [Description("The name of the starship to search for")]
         public string ShipName { get; set; }
     }
 

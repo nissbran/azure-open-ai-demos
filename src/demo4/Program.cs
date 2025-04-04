@@ -1,8 +1,11 @@
+using System;
 using Demo4;
 using Microsoft.Extensions.Configuration;
 using Serilog;
 using Serilog.Sinks.SystemConsole.Themes;
 using Spectre.Console;
+
+Console.OutputEncoding = System.Text.Encoding.UTF8;
 
 var configuration = new ConfigurationBuilder()
     .AddEnvironmentVariables()

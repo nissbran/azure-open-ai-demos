@@ -25,7 +25,7 @@ public class ChatWithFunctionsService
     private readonly List<ChatMessage> _memory = new();
 
     private readonly SwapiShipApiFunction _swapiApiFunction = new();
-    private readonly SwapiAzureAiSearchFunction _swapiAzureAiSearchFunction;
+    private readonly VehicleSearchFunction _vehicleSearchFunction;
 
     public ChatWithFunctionsService(IConfiguration configuration)
     {
@@ -33,7 +33,7 @@ public class ChatWithFunctionsService
         var endpoint = configuration["AzureOpenAI:Endpoint"];
         _model = configuration["AzureOpenAI:ChatModel"];
         _client = new AzureOpenAIClient(new Uri(endpoint), new ApiKeyCredential(apiKey));
-        _swapiAzureAiSearchFunction = new SwapiAzureAiSearchFunction(configuration);
+        _vehicleSearchFunction = new VehicleSearchFunction(configuration);
         _chatClient = _client.GetChatClient(_model);
     }
 
@@ -60,7 +60,7 @@ public class ChatWithFunctionsService
                 _memory.Add(new UserChatMessage(message));
                 var options = new ChatCompletionOptions();
                 options.Tools.Add(_swapiApiFunction.GetToolDefinition());
-                options.Tools.Add(_swapiAzureAiSearchFunction.GetToolDefinition());
+                options.Tools.Add(_vehicleSearchFunction.GetToolDefinition());
 
                 var chatCompletionResult = await _chatClient.CompleteChatAsync(_memory, options);
 
@@ -90,11 +90,11 @@ public class ChatWithFunctionsService
                                     _memory.Add(new ToolChatMessage(toolCall.Id, ship));
                                     break;
                                 }
-                                case SwapiAzureAiSearchFunction.FunctionName:
+                                case VehicleSearchFunction.FunctionName:
                                 {
                                     Log.Verbose("Calling Star Wars Azure AI search function with parameters: {Arguments}", toolCall.FunctionArguments);
-                                    var parameters = JsonSerializer.Deserialize<SwapiAzureAiSearchFunction.SwapiAzureAiSearchFunctionParameters>(toolCall.FunctionArguments);
-                                    var vehicles = await _swapiAzureAiSearchFunction.GetVehicles(parameters);
+                                    var parameters = JsonSerializer.Deserialize<VehicleSearchFunction.SwapiAzureAiSearchFunctionParameters>(toolCall.FunctionArguments);
+                                    var vehicles = await _vehicleSearchFunction.GetVehicles(parameters);
                                     _memory.Add(new ToolChatMessage(toolCall.Id, vehicles));
                                     break;
                                 }

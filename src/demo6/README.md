@@ -1,6 +1,6 @@
-# Demo3
+# Demo4
 
-Azure OpenAI and RAG integration with Microsoft.Extension.AI libraries. Function calling with Azure AI Search.
+Azure OpenAI and function calling using an external MCP server.
 
 ## To run
 
@@ -13,15 +13,15 @@ Create a file called 'appsettings.local.json' in the root of the project with th
   "AzureOpenAI": {
     "Endpoint": "https://   <your endpoint>  .openai.azure.com/",
     "ApiKey": "  <your key>  ",
-    "ChatModel": " <your chat model, ex gpt-4-with-assistants >   ",
-    "EmbeddingModel": " <your embedding model, ex embedding-ada-002 >   "
+    "ChatModel": " <your chat model, ex gpt-4-with-assistants >   "
   },
-  "AzureAISearch": {
-    "Endpoint": "https://   <your endpoint>   .search.windows.net",
-    "ApiKey": "  <your key>  "
+  "McpServer": {
+    "BaseUrl": "http://localhost:5195"
   }
 }
 ```
+
+Before starting the application, make sure the mcp server is running. You can do this by starting the `McpToolServer`.
 
 Then run the application.
 

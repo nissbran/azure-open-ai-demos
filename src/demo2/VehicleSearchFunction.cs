@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
@@ -6,25 +7,25 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Azure;
 using Azure.AI.OpenAI;
-using Azure.AI.OpenAI.Assistants;
 using Azure.Search.Documents;
 using Azure.Search.Documents.Models;
 using Microsoft.Extensions.Configuration;
 using OpenAI;
+using OpenAI.Chat;
 using OpenAI.Embeddings;
 using Serilog;
 
-namespace Demo3;
+namespace Demo2;
 
-public class SwapiAzureAiSearchFunction : IGptFunction
+public class VehicleSearchFunction : IGptFunction
 {
     private readonly SearchClient _searchClient;
     private readonly string _model;
     private readonly OpenAIClient _client;
     private readonly EmbeddingClient _embeddingClient;
-    private const string FunctionName = "call_vehicle_search";
+    public const string FunctionName = "call_vehicle_search";
 
-    public SwapiAzureAiSearchFunction(IConfiguration configuration)
+    public VehicleSearchFunction(IConfiguration configuration)
     {
         _searchClient = new SearchClient(new Uri(configuration["AzureAISearch:Endpoint"]), "swapi-vehicle-index", new AzureKeyCredential(configuration["AzureAISearch:ApiKey"]));
         _model = configuration["AzureOpenAI:EmbeddingModel"];
@@ -32,37 +33,38 @@ public class SwapiAzureAiSearchFunction : IGptFunction
         _embeddingClient = _client.GetEmbeddingClient(_model);
     }
 
-    public FunctionToolDefinition GetFunctionDefinition()
+    public ChatTool GetToolDefinition()
     {
-        return new FunctionToolDefinition(FunctionName, "Searches for a vehicle in Star Wars.", BinaryData.FromObjectAsJson(
-            new
-            {
-                Type = "object",
-                Properties = new
-                {
-                    search_query = new
-                    {
-                        Type = "string",
-                        Description = "The search query",
-                    }
-                },
-                Required = new[] { "search_query" },
-            }, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase }));
+        return ChatTool.CreateFunctionTool(FunctionName, "Searches for a vehicle in Star Wars.", GetFunctionParameters());
     }
 
-    public string GetFunctionName() => FunctionName;
+    private BinaryData GetFunctionParameters()
+    {
+        return BinaryData.FromObjectAsJson(new
+        {
+            Type = "object",
+            Properties = new
+            {
+                search_query = new
+                {
+                    Type = "string",
+                    Description = "The search query",
+                }
+            },
+            Required = new[] { "search_query" },
+        }, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
+    }
 
     public async Task<string> GetVehicles(SwapiAzureAiSearchFunctionParameters parameters)
     {
-        Log.Verbose("Searching for vehicles with query {SearchQuery}", parameters.SearchQuery);
+        Log.Information("Searching for vehicles with query {SearchQuery}", parameters.SearchQuery);
         
         var embeddingsResult = await _embeddingClient.GenerateEmbeddingAsync(parameters.SearchQuery);
 
-        Log.Verbose("Embeddings result: {EmbeddingsResult}", embeddingsResult.Value.ToFloats());
-        
         var searchResponse = await _searchClient.SearchAsync<VehicleSearchResult>(parameters.SearchQuery, new SearchOptions()
         {
             QueryType = SearchQueryType.Semantic,
+            Size = 5,
             VectorSearch = new VectorSearchOptions
             {
                 Queries =
@@ -83,32 +85,32 @@ public class SwapiAzureAiSearchFunction : IGptFunction
                 MaxWait = TimeSpan.FromSeconds(5)
             }
         });
-
+        
         var result = searchResponse.Value.GetResults().ToList();
         
         Log.Verbose("Number of search results: {Count}", result.Count);
         
         if (result.Count == 0)
         {
-            return "No vehicles found with that name.";
+            return "[]";
         }
-
-        var searchResultBuilder = new StringBuilder();
-
-        searchResultBuilder.AppendLine("Here are the vehicles I found:");
         
-        foreach (var resultPage in result)
-        {
-            Log.Verbose("Search result: {Summary}", resultPage.Document.summary);
-            searchResultBuilder.AppendLine(resultPage.Document.summary);
-        }
-
-        return searchResultBuilder.ToString();
+        var json = JsonSerializer.Serialize(result.Select(searchResult => new VehicleSearchResult(
+            searchResult.Document.title,
+            searchResult.Document.summary,
+            searchResult.Document.model,
+            searchResult.Document.manufacturer
+        )).ToList());
+            
+        Log.Verbose("Search result: {Summary}", json);
+        
+        return json;
     }
 
     public class SwapiAzureAiSearchFunctionParameters
     {
         [JsonPropertyName("search_query")] 
+        [Description("The search query for the vehicle, e.g. speeder bike")]
         public string SearchQuery { get; set; }
     }
 

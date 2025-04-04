@@ -1,55 +1,37 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Net.Http;
-using System.Net.Http.Json;
+﻿using System.ComponentModel;
 using System.Text.Encodings.Web;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
-using Microsoft.SemanticKernel;
-using Serilog;
+using ModelContextProtocol.Server;
 
-namespace Demo5.Agents.Starship;
+namespace McpToolServer.Tools;
 
-public class SwapiShipApiPlugin
+[McpServerToolType]
+public sealed class ShipTool
 {
-    private readonly HttpClient _httpClient;
-    private const string BaseUrl = "https://swapi.dev/api/";
-
-    public SwapiShipApiPlugin()
+    [McpServerTool, Description("Gets Star Wars starship information")]
+    public static async Task<string> GetStarship(
+        IHttpClientFactory httpClientFactory,
+        ILogger<ShipTool> logger,
+        [Description("The name of the ship, e.g. CR90 corvette")]
+        string shipName)
     {
-        _httpClient = new HttpClient() { BaseAddress = new Uri(BaseUrl) };
-    }
-
-    [KernelFunction("get_ship_information")]
-    [Description("Gets Star Wars starship information.")]
-    [return: Description("An array of ship information")]
-    public async Task<string> GetShipInformation(SwapiShipApiFunctionParameters parameters)
-    {
-        Log.Verbose("Searching for starship with name {ShipName}", parameters.ShipName);
+        logger.LogInformation("Searching for starship with name {ShipName}", shipName);
         
-        var response = await _httpClient.GetFromJsonAsync<SwapiResponse>($"starships?search={UrlEncoder.Default.Encode(parameters.ShipName)}");
-        var ship = response.count == 0 ? "No starship found with that name." : ToGptReadable(response.results[0]);
+        var httpClient = httpClientFactory.CreateClient("SwapiClient");
         
-        Log.Verbose("Returning ship information: {Ship}", ship);
+        var response = await httpClient.GetFromJsonAsync<SwapiResponse>($"starships?search={UrlEncoder.Default.Encode(shipName)}");
+        var ship = response?.count == 0 ? "No starship found with that name." : ToGptReadable(response!.results[0]);
         
+        logger.LogInformation("Returning ship information: {Ship}", ship);
         return ship;
     }
-
+    
     private static string ToGptReadable(StarShip starShip)
     {
         return $"Name: {starShip.name}, Model: {starShip.model}, Manufacturer: {starShip.manufacturer}, Cost in credits: {starShip.cost_in_credits}, Length: {starShip.length}, Max atmosphering speed: {starShip.max_atmosphering_speed}, " +
                $"Crew: {starShip.crew}, Passengers: {starShip.passengers}, Cargo capacity: {starShip.cargo_capacity}, Consumables: {starShip.consumables}, Hyperdrive rating: {starShip.hyperdrive_rating}, MGLT: {starShip.MGLT}, " +
                $"Starship class: {starShip.starship_class}, Pilots: {string.Join(", ", starShip.pilots)}, Films: {string.Join(", ", starShip.films)}";
     }
-
-    public class SwapiShipApiFunctionParameters
-    {
-        [JsonPropertyName("ship_name")] 
-        [Description("The name of the ship, e.g. CR90 corvette")]
-        public string ShipName { get; set; }
-    }
-
+    
     private record SwapiResponse(
         int count,
         string next,

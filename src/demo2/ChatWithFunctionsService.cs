@@ -85,17 +85,21 @@ public class ChatWithFunctionsService
                                 case SwapiShipApiFunction.FunctionName:
                                 {
                                     Log.Verbose("Calling Star Wars ship api function with parameters: {Arguments}", toolCall.FunctionArguments);
+
                                     var parameters = JsonSerializer.Deserialize<SwapiShipApiFunction.SwapiShipApiFunctionParameters>(toolCall.FunctionArguments);
                                     var ship = await _swapiApiFunction.CallStarWarsShipApi(parameters);
                                     _memory.Add(new ToolChatMessage(toolCall.Id, ship));
+
                                     break;
                                 }
                                 case VehicleSearchFunction.FunctionName:
                                 {
                                     Log.Verbose("Calling Star Wars Azure AI search function with parameters: {Arguments}", toolCall.FunctionArguments);
+
                                     var parameters = JsonSerializer.Deserialize<VehicleSearchFunction.SwapiAzureAiSearchFunctionParameters>(toolCall.FunctionArguments);
                                     var vehicles = await _vehicleSearchFunction.GetVehicles(parameters);
                                     _memory.Add(new ToolChatMessage(toolCall.Id, vehicles));
+
                                     break;
                                 }
                                 default:

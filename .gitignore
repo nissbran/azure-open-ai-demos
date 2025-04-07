@@ -1,3 +1,16 @@
+# Tools
+.idea
+*.suo
+*.user
+*.sln.docstates
+*.sln.ide/
+*.userprefs
+*.GhostDoc.xml
+*.bicepparam
+.vscode
+.vs
+.dapr
+
 # .NET
 [Bb]in/
 [Oo]bj/

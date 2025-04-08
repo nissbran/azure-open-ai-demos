@@ -57,9 +57,10 @@ public class ConsoleChat
                             activity?.AddEvent(userMessageEvent);
                             
                             var response = await _chatService.TypeMessageAsync(message, cancellationToken);
+
                             AnsiConsole.Markup($"[bold red]{BotName}:[/] ");
                             AnsiConsole.WriteLine(string.IsNullOrEmpty(response) ? "I'm sorry, I can't do that right now." : response);
-                            
+
                             var botMessageEvent = new ActivityEvent("bot_response", DateTimeOffset.UtcNow, new ActivityTagsCollection([
                                 new KeyValuePair<string, object>("message", response)
                             ]));

@@ -1,5 +1,5 @@
 using System;
-using Demo6;
+using Demo7;
 using Microsoft.Extensions.Configuration;
 using Serilog;
 using Serilog.Sinks.SystemConsole.Themes;
@@ -21,7 +21,7 @@ Log.Logger = new LoggerConfiguration()
 
 // Create chat service
 var chatService = new ChatWithSemanticKernelService(configuration);
-string botName = "Star Wars Assistant";
+string botName = "GitHub Assistant";
 
 // Run chat
 WriteWelcomeMessage();
@@ -37,15 +37,15 @@ while (true)
             Log.Verbose("Clearing the session");
             AnsiConsole.Clear();
             await chatService.StartNewSessionAsync();
-            botName = "Star Wars Assistant";
+            botName = "Github Assistant";
             WriteWelcomeMessage();
             break;
         case "/q":
-            AnsiConsole.MarkupLine($"[bold red]{botName}:[/] Goodbye!");
+            AnsiConsole.MarkupLine($"[bold green]{botName}:[/] Goodbye!");
             return;
         default:
             var response = await chatService.TypeMessageAsync(message);
-            AnsiConsole.Markup($"[bold red]{botName}:[/] ");
+            AnsiConsole.Markup($"[bold green]{botName}:[/] ");
             AnsiConsole.WriteLine(string.IsNullOrEmpty(response) ? "I'm sorry, I can't do that right now." : response);
             break;
     }
@@ -54,7 +54,7 @@ while (true)
 void WriteWelcomeMessage()
 {
     AnsiConsole.MarkupLine("[bold green]Welcome to the chat![/]");
-    AnsiConsole.MarkupLine("[bold green]The star wars assistant is here to help you![/]");
+    AnsiConsole.MarkupLine("[bold green]The GitHub assistant is here to help you![/]");
     AnsiConsole.MarkupLine("[bold green] - Use /clear to clear the session[/]");
     AnsiConsole.MarkupLine("[bold green] - Use /q to exit[/]");
 }

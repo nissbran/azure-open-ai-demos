@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Encodings.Web;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.SemanticKernel;
@@ -28,11 +29,26 @@ public class SwapiShipApiPlugin
     {
         Log.Verbose("Searching for starship with name {ShipName}", parameters.ShipName);
         
-        var response = await _httpClient.GetFromJsonAsync<SwapiResponse>($"starships?search={UrlEncoder.Default.Encode(parameters.ShipName)}");
-        var ship = response.count == 0 ? "No starship found with that name." : ToGptReadable(response.results[0]);
-        
-        Log.Verbose("Returning ship information: {Ship}", ship);
-        
+        var ship = string.Empty;
+
+        try
+        {
+            var response = await _httpClient.GetFromJsonAsync<SwapiResponse>($"starships?search={UrlEncoder.Default.Encode(parameters.ShipName)}");
+            ship = response.count == 0 ? "No starship found with that name." : ToGptReadable(response.results[0]);
+
+            Log.Verbose("Returning ship information: {Ship}", ship);
+        }
+        catch (HttpRequestException e)
+        {
+            Log.Error(e, "Error occurred while fetching starship information");
+            return "An error occurred while fetching starship information.";
+        }
+        catch (JsonException e)
+        {
+            Log.Error(e, "Error occurred while deserializing starship information");
+            return "An error occurred while processing the starship information.";
+        }
+
         return ship;
     }
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,20 +13,20 @@ using ModelContextProtocol.Protocol.Transport;
 using Serilog;
 #pragma warning disable SKEXP0001
 
-namespace Demo6;
+namespace Demo7;
 
 public class ChatWithSemanticKernelService
 {
-    private const string SystemMessage = "You are a helpful assistant that helps find information about starships and vehicles in Star Wars.";
+    private const string SystemMessage = "You are a helpful assistant that helps find information about your personal github account. Please use the tools available to you to answer the questions. If you don't know the answer, please ask the user for more information.";
     private readonly ChatHistory _history = [];
     private readonly Kernel _kernel;
-    private readonly Uri _mcpServerUri;
     private readonly IChatCompletionService _chatCompletionService;
     private readonly OpenAIPromptExecutionSettings _openAIPromptExecutionSettings = new() 
     {
         ToolCallBehavior = ToolCallBehavior.AutoInvokeKernelFunctions
     };
     private readonly IChatHistoryReducer _chatHistoryReducer;
+    private readonly string _githubPat;
 
     private const int ReducerTarget = 2;
     private const int HistoryLimit = 4;
@@ -38,14 +39,13 @@ public class ChatWithSemanticKernelService
         var apiKey = configuration["AzureOpenAI:ApiKey"] ?? throw new ArgumentNullException(nameof(configuration), "ApiKey configuration is missing.");
         var endpoint = configuration["AzureOpenAI:Endpoint"] ?? throw new ArgumentNullException(nameof(configuration), "Endpoint configuration is missing.");
         
-        var mcpBaseUrl = configuration["McpServer:BaseUrl"] ?? throw new ArgumentNullException(nameof(configuration), "McpServer:Uri configuration is missing.");
-        _mcpServerUri = new Uri(mcpBaseUrl);
-        
         var builder = Kernel.CreateBuilder().AddAzureOpenAIChatCompletion(model, endpoint, apiKey);
-        
+
         // builder.Services.AddLogging(configure => configure.AddConsole());
         // builder.Services.AddLogging(configure => configure.SetMinimumLevel(LogLevel.Trace));
-        
+
+        _githubPat = configuration["Github:PersonalAccessToken"] ?? throw new ArgumentNullException(nameof(configuration), "Github:PersonalAccessToken configuration is missing.");
+
         _kernel = builder.Build();
         _chatCompletionService = _kernel.GetRequiredService<IChatCompletionService>();
         _chatHistoryReducer = new ChatHistorySummarizationReducer(_chatCompletionService, ReducerTarget, HistoryLimit);
@@ -67,11 +67,14 @@ public class ChatWithSemanticKernelService
         _mcpClient = await McpClientFactory.CreateAsync(
             new McpServerConfig()
             {
-                Id = "starwars_info",
-                Name = "Star Wars Info",
-                TransportType = TransportTypes.Sse,
-                Location = _mcpServerUri + "sse",
-                    
+                Id = "github",
+                Name = "github mcp",
+                TransportType = TransportTypes.StdIo,
+                TransportOptions = new()
+                {
+                    ["command"] = "docker", 
+                    ["arguments"] =  $"run -i --rm -e GITHUB_PERSONAL_ACCESS_TOKEN={_githubPat} ghcr.io/github/github-mcp-server:v0.1.0"
+                }
             }).ConfigureAwait(false);
         var tools = await _mcpClient.ListToolsAsync().ConfigureAwait(false);
         
@@ -83,7 +86,7 @@ public class ChatWithSemanticKernelService
         }
         
         _kernel.Plugins.Clear();
-        _kernel.Plugins.AddFromFunctions("StarwarsInfo", tools.Select(aiFunction => aiFunction.AsKernelFunction()));
+        _kernel.Plugins.AddFromFunctions("Github", tools.Select(aiFunction => aiFunction.AsKernelFunction()));
     }
     
     public async Task<string> TypeMessageAsync(string message)

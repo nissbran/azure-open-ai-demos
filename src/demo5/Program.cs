@@ -1,7 +1,6 @@
 using System;
 using System.Diagnostics;
 using System.Threading;
-using Azure.Monitor.OpenTelemetry.Exporter;
 using Demo5;
 using Microsoft.Extensions.Configuration;
 using OpenTelemetry;

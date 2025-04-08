@@ -73,13 +73,18 @@ public class ChatWithAgentsService
 
         var selectionStrategy = new KernelFunctionSelectionStrategy(selectionFunction, kernel)
         {
-            // Always start with the writer agent.
+            // Always start with the conversation agent.
             InitialAgent = conversationAgent,
+
             // Parse the function response.
             //ResultParser = (result) => result.GetValue<string>() ?? WriterName,
+
             // The prompt variable name for the history argument.
             HistoryVariableName = "history",
+
+            // If chosen agent fails, use the initial agent as fallback.
             UseInitialAgentAsFallback = true,
+
             // Save tokens by not including the entire history in the prompt
             HistoryReducer = _chatHistoryReducer,
         };

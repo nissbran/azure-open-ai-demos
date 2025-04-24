@@ -3,6 +3,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Connectors.OpenAI;
@@ -39,12 +41,12 @@ public class ChatWithSemanticKernelService
         var endpoint = configuration["AzureOpenAI:Endpoint"] ?? throw new ArgumentNullException(nameof(configuration), "Endpoint configuration is missing.");
         
         var mcpBaseUrl = configuration["McpServer:BaseUrl"] ?? throw new ArgumentNullException(nameof(configuration), "McpServer:Uri configuration is missing.");
-        _mcpServerUri = new Uri(mcpBaseUrl);
+        _mcpServerUri = new Uri(mcpBaseUrl + "/sse");
         
         var builder = Kernel.CreateBuilder().AddAzureOpenAIChatCompletion(model, endpoint, apiKey);
         
-        // builder.Services.AddLogging(configure => configure.AddConsole());
-        // builder.Services.AddLogging(configure => configure.SetMinimumLevel(LogLevel.Trace));
+        builder.Services.AddLogging(configure => configure.AddConsole());
+        builder.Services.AddLogging(configure => configure.SetMinimumLevel(LogLevel.Trace));
         
         _kernel = builder.Build();
         _chatCompletionService = _kernel.GetRequiredService<IChatCompletionService>();
@@ -65,14 +67,12 @@ public class ChatWithSemanticKernelService
         
         Log.Verbose("Creating new MCP client");
         _mcpClient = await McpClientFactory.CreateAsync(
-            new McpServerConfig()
+            new SseClientTransport(new SseClientTransportOptions
             {
-                Id = "starwars_info",
+                Endpoint = _mcpServerUri,
                 Name = "Star Wars Info",
-                TransportType = TransportTypes.Sse,
-                Location = _mcpServerUri + "sse",
-                    
-            }).ConfigureAwait(false);
+                
+            })).ConfigureAwait(false);
         var tools = await _mcpClient.ListToolsAsync().ConfigureAwait(false);
         
         Log.Verbose("Found {Count} tools", tools.Count);

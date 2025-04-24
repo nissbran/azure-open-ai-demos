@@ -11,26 +11,31 @@ using ModelContextProtocol;
 using ModelContextProtocol.Client;
 using ModelContextProtocol.Protocol.Transport;
 using Serilog;
+
 #pragma warning disable SKEXP0001
 
 namespace Demo7;
 
 public class ChatWithSemanticKernelService
 {
-    private const string SystemMessage = "You are a helpful assistant that helps find information about your personal github account. Please use the tools available to you to answer the questions. If you don't know the answer, please ask the user for more information.";
+    private const string SystemMessage =
+        "You are a helpful assistant that helps find information about your personal github account. Please use the tools available to you to answer the questions. If you don't know the answer, please ask the user for more information.";
+
     private readonly ChatHistory _history = [];
     private readonly Kernel _kernel;
     private readonly IChatCompletionService _chatCompletionService;
-    private readonly OpenAIPromptExecutionSettings _openAIPromptExecutionSettings = new() 
+
+    private readonly OpenAIPromptExecutionSettings _openAIPromptExecutionSettings = new()
     {
         ToolCallBehavior = ToolCallBehavior.AutoInvokeKernelFunctions
     };
+
     private readonly IChatHistoryReducer _chatHistoryReducer;
     private readonly string _githubPat;
 
     private const int ReducerTarget = 2;
     private const int HistoryLimit = 4;
-    
+
     private IMcpClient _mcpClient;
 
     public ChatWithSemanticKernelService(IConfiguration configuration)
@@ -38,7 +43,7 @@ public class ChatWithSemanticKernelService
         var model = configuration["AzureOpenAI:ChatModel"] ?? throw new ArgumentNullException(nameof(configuration), "ChatModel configuration is missing.");
         var apiKey = configuration["AzureOpenAI:ApiKey"] ?? throw new ArgumentNullException(nameof(configuration), "ApiKey configuration is missing.");
         var endpoint = configuration["AzureOpenAI:Endpoint"] ?? throw new ArgumentNullException(nameof(configuration), "Endpoint configuration is missing.");
-        
+
         var builder = Kernel.CreateBuilder().AddAzureOpenAIChatCompletion(model, endpoint, apiKey);
 
         // builder.Services.AddLogging(configure => configure.AddConsole());
@@ -56,56 +61,54 @@ public class ChatWithSemanticKernelService
         Log.Verbose("Starting new session");
         _history.Clear();
         _history.AddSystemMessage(SystemMessage);
-        
+
         if (_mcpClient != null)
         {
             Log.Verbose("Disposing the old mcpClient");
             await _mcpClient.DisposeAsync().ConfigureAwait(false);
         }
-        
+
         Log.Verbose("Creating new MCP client");
+        var dockerPat = $"GITHUB_PERSONAL_ACCESS_TOKEN={_githubPat}".ToString();
         _mcpClient = await McpClientFactory.CreateAsync(
-            new McpServerConfig()
+            new StdioClientTransport(new StdioClientTransportOptions
             {
-                Id = "github",
-                Name = "github mcp",
-                TransportType = TransportTypes.StdIo,
-                TransportOptions = new()
+                Command = "docker",
+                Arguments = new List<string>()
                 {
-                    ["command"] = "docker", 
-                    ["arguments"] =  $"run -i --rm -e GITHUB_PERSONAL_ACCESS_TOKEN={_githubPat} ghcr.io/github/github-mcp-server:v0.1.0"
-                }
-            }).ConfigureAwait(false);
+                    "run", "-i", "--rm", "-e", dockerPat, "ghcr.io/github/github-mcp-server:v0.1.0"
+                },
+            })).ConfigureAwait(false);
         var tools = await _mcpClient.ListToolsAsync().ConfigureAwait(false);
-        
+
         Log.Verbose("Found {Count} tools", tools.Count);
-        
+
         foreach (var tool in tools)
         {
             Log.Verbose("Tool: {Name} - {Description}", tool.Name, tool.Description);
         }
-        
+
         _kernel.Plugins.Clear();
         _kernel.Plugins.AddFromFunctions("Github", tools.Select(aiFunction => aiFunction.AsKernelFunction()));
     }
-    
+
     public async Task<string> TypeMessageAsync(string message)
     {
         try
         {
             if (await _history.ReduceInPlaceAsync(_chatHistoryReducer, CancellationToken.None))
             {
-                Log.Information("Chat history reduced to {Count} messages with {Summary}", 
-                    _history.Count, 
+                Log.Information("Chat history reduced to {Count} messages with {Summary}",
+                    _history.Count,
                     _history.Where(c => c.Metadata != null && c.Metadata.ContainsKey("__summary__")).Select(content => content.Content));
             }
-            
+
             _history.AddUserMessage(message);
-            
+
             var response = await _chatCompletionService.GetChatMessageContentAsync(_history, _openAIPromptExecutionSettings, _kernel);
 
             _history.AddMessage(response.Role, response.Content ?? string.Empty);
-            
+
             return response.Content;
         }
         catch (Exception e)

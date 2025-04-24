@@ -26,6 +26,7 @@ builder.Services.AddHttpClient("SwapiClient", client =>
 });
 
 builder.Services.AddMcpServer()
+    .WithHttpTransport()
     .WithTools<VehicleSearchTool>()
     .WithTools<ShipTool>();
 

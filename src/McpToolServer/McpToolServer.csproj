@@ -7,16 +7,24 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.3"/>
-        <PackageReference Include="ModelContextProtocol" Version="0.1.0-preview.5" />
-        <PackageReference Include="ModelContextProtocol.AspNetCore" Version="0.1.0-preview.5" />
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.3" />
+        <PackageReference Include="Microsoft.SemanticKernel" Version="1.45.0" />
+        <PackageReference Include="ModelContextProtocol" Version="0.1.0-preview.10" />
+        <PackageReference Include="ModelContextProtocol.AspNetCore" Version="0.1.0-preview.10" />
         <PackageReference Include="Azure.Search.Documents" Version="11.6.0" />
         <PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
-        <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0"  />
+        <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.11.2" />
+        <PackageReference Include="OpenTelemetry.Extensions.Hosting" />
+        <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" />
+        <PackageReference Include="OpenTelemetry.Instrumentation.Http" />
     </ItemGroup>
     
     <ItemGroup>
-        <None Include="appsettings.local.json" CopyToOutputDirectory="PreserveNewest" Condition="Exists('appsettings.local.json')"/>
+        <None Include="appsettings.local.json" CopyToOutputDirectory="PreserveNewest" Condition="Exists('appsettings.local.json')" />
         <None Include="appsettings.local.json" />
     </ItemGroup>
 

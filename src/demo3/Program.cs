@@ -29,7 +29,9 @@ builder.Services.AddSingleton(
     new AzureOpenAIClient(new Uri(builder.Configuration["AzureOpenAI:Endpoint"]), new ApiKeyCredential(builder.Configuration["AzureOpenAI:ApiKey"])));
 
 builder.Services.AddKeyedChatClient("StarWars", 
-        provider => provider.GetRequiredService<AzureOpenAIClient>().AsChatClient(builder.Configuration["AzureOpenAI:ChatModel"]))
+        provider => provider.GetRequiredService<AzureOpenAIClient>()
+            .GetChatClient(builder.Configuration["AzureOpenAI:ChatModel"])
+            .AsIChatClient())
     .UseFunctionInvocation()
     .UseLogging();
 builder.Services.AddSingleton<ChatWithFunctionsService>();

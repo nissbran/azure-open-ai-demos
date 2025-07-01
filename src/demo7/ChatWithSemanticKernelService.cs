@@ -7,9 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Connectors.OpenAI;
-using ModelContextProtocol;
 using ModelContextProtocol.Client;
-using ModelContextProtocol.Protocol.Transport;
 using Serilog;
 
 #pragma warning disable SKEXP0001
@@ -76,7 +74,7 @@ public class ChatWithSemanticKernelService
                 Command = "docker",
                 Arguments = new List<string>()
                 {
-                    "run", "-i", "--rm", "-e", dockerPat, "ghcr.io/github/github-mcp-server:v0.1.0"
+                    "run", "-i", "--rm", "-e", dockerPat, "ghcr.io/github/github-mcp-server:v0.2.1"
                 },
             })).ConfigureAwait(false);
         var tools = await _mcpClient.ListToolsAsync().ConfigureAwait(false);

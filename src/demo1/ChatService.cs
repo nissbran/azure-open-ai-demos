@@ -44,10 +44,12 @@ public class ChatService
         try
         {
             _memory.Add(new UserChatMessage(message));
+
             var response = await _chatClient.CompleteChatAsync(_memory);
-            
             var responseMessage = response.Value.Content.First().Text;
+
             _memory.Add(new AssistantChatMessage(responseMessage));
+
             return responseMessage;
         }
         catch (Exception e)

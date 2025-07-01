@@ -8,9 +8,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Connectors.OpenAI;
-using ModelContextProtocol;
 using ModelContextProtocol.Client;
-using ModelContextProtocol.Protocol.Transport;
 using Serilog;
 #pragma warning disable SKEXP0001
 
@@ -41,7 +39,8 @@ public class ChatWithSemanticKernelService
         var endpoint = configuration["AzureOpenAI:Endpoint"] ?? throw new ArgumentNullException(nameof(configuration), "Endpoint configuration is missing.");
         
         var mcpBaseUrl = configuration["McpServer:BaseUrl"] ?? throw new ArgumentNullException(nameof(configuration), "McpServer:Uri configuration is missing.");
-        _mcpServerUri = new Uri(mcpBaseUrl + "/sse");
+        //_mcpServerUri = new Uri(mcpBaseUrl + "/sse");
+        _mcpServerUri = new Uri(mcpBaseUrl);
         
         var builder = Kernel.CreateBuilder().AddAzureOpenAIChatCompletion(model, endpoint, apiKey);
         
@@ -70,6 +69,7 @@ public class ChatWithSemanticKernelService
             new SseClientTransport(new SseClientTransportOptions
             {
                 Endpoint = _mcpServerUri,
+                TransportMode = HttpTransportMode.AutoDetect,
                 Name = "Star Wars Info",
                 
             })).ConfigureAwait(false);

@@ -1,14 +1,12 @@
 using System;
-using Demo4;
+using Demo8;
 using Microsoft.Extensions.Configuration;
-using OpenTelemetry;
-using OpenTelemetry.Resources;
-using OpenTelemetry.Trace;
 using Serilog;
 using Serilog.Sinks.SystemConsole.Themes;
 using Spectre.Console;
 
 Console.OutputEncoding = System.Text.Encoding.UTF8;
+
 
 var configuration = new ConfigurationBuilder()
     .AddEnvironmentVariables()
@@ -22,28 +20,19 @@ Log.Logger = new LoggerConfiguration()
     .WriteTo.Console(theme: AnsiConsoleTheme.Sixteen)
     .CreateLogger();
 
-AppContext.SetSwitch("Microsoft.SemanticKernel.Experimental.GenAI.EnableOTelDiagnosticsSensitive", true);
-
-var resourceBuilder = ResourceBuilder
-    .CreateDefault()
-    .AddService("Demo4");
-
-using var traceProvider = Sdk.CreateTracerProviderBuilder()
-    .SetResourceBuilder(resourceBuilder)
-    .AddHttpClientInstrumentation()
-    .AddSource("Microsoft.SemanticKernel*", "Demo4")
-    .AddOtlpExporter()
-    //.AddAzureMonitorTraceExporter(options => options.ConnectionString = configuration["ApplicationInsights:ConnectionString"])
-    .Build();
-
 // Create chat service
-var chatService = new ChatWithSemanticKernelService(configuration);
+
+var agentId = configuration["AgentService:AgentId"];
+var chatService = new ChatWithAgentService(configuration, agentId);
+
 string botName = "Star Wars Assistant";
 
 // Run chat
 WriteWelcomeMessage();
 
-chatService.StartNewSession();
+await chatService.StartNewSessionAsync();
+
+var useStreaming = true;
 
 while (true)
 {
@@ -53,17 +42,30 @@ while (true)
         case "/clear":
             Log.Verbose("Clearing the session");
             AnsiConsole.Clear();
-            chatService.StartNewSession();
+            await chatService.StartNewSessionAsync();
             botName = "Star Wars Assistant";
             WriteWelcomeMessage();
             break;
         case "/q":
-            AnsiConsole.MarkupLine($"[bold red]{botName}:[/] Goodbye!");
+            AnsiConsole.MarkupLine($"[bold green]{botName}:[/] Goodbye!");
             return;
         default:
-            var response = await chatService.TypeMessageAsync(message);
-            AnsiConsole.Markup($"[bold red]{botName}:[/] ");
-            AnsiConsole.WriteLine(string.IsNullOrEmpty(response) ? "I'm sorry, I can't do that right now." : response);
+            if (useStreaming)
+            {
+                AnsiConsole.Markup($"[bold red]{botName}:[/] "); 
+                await foreach (var chunk in chatService.TypeAndStreamMessageAsync(message))
+                {
+                    AnsiConsole.Write(chunk);
+                }
+                AnsiConsole.WriteLine();
+                break;
+            }
+            else
+            {
+                var response = await chatService.TypeMessageAsync(message);
+                AnsiConsole.MarkupLine($"[bold red]{botName}:[/] " + response); 
+                AnsiConsole.WriteLine(string.IsNullOrEmpty(response) ? "I'm sorry, I can't do that right now." : response);
+            }
             break;
     }
 }
@@ -71,7 +73,7 @@ while (true)
 void WriteWelcomeMessage()
 {
     AnsiConsole.MarkupLine("[bold green]Welcome to the chat![/]");
-    AnsiConsole.MarkupLine("[bold green]The star wars assistant is here to help you![/]");
+    AnsiConsole.MarkupLine("[bold green]The Star Wars assistant is here to help you![/]");
     AnsiConsole.MarkupLine("[bold green] - Use /clear to clear the session[/]");
     AnsiConsole.MarkupLine("[bold green] - Use /q to exit[/]");
 }

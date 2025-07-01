@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo6-Mcp", "src\demo6\Demo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo7-Mcp-Github", "src\demo7\Demo7-Mcp-Github.csproj", "{C861CD58-B7F8-2529-DF3B-147B9E6DEAFD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo8-AgentService", "src\demo8\Demo8-AgentService.csproj", "{5888BC6F-125E-4962-AD19-D8852F6A6552}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +65,10 @@ Global
 		{C861CD58-B7F8-2529-DF3B-147B9E6DEAFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C861CD58-B7F8-2529-DF3B-147B9E6DEAFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C861CD58-B7F8-2529-DF3B-147B9E6DEAFD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5888BC6F-125E-4962-AD19-D8852F6A6552}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5888BC6F-125E-4962-AD19-D8852F6A6552}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5888BC6F-125E-4962-AD19-D8852F6A6552}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5888BC6F-125E-4962-AD19-D8852F6A6552}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

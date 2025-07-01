@@ -30,10 +30,10 @@ public class SwapiShipApiFunction
     [Description("Gets Star Wars starship information")]
     public async Task<string> GetShipInformation(SwapiShipApiFunctionParameters parameters)
     {
-        Log.Verbose("Searching for starship with name {ShipName}", parameters.ShipName);
+        Log.Information("Searching for starship with name {ShipName}", parameters.ShipName);
         var response = await _httpClient.GetFromJsonAsync<SwapiResponse>($"starships?search={UrlEncoder.Default.Encode(parameters.ShipName)}");
         var ship = response.count == 0 ? "No starship found with that name." : ToGptReadable(response.results[0]);
-        Log.Verbose("Returning ship information: {Ship}", ship);
+        Log.Information("Returning ship information: {Ship}", ship);
         return ship;
     }
 

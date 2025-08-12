@@ -1,13 +1,26 @@
 # azure-open-ai-demos
 
-Demo repo for showcasing how to use Azure OpenAI services.
-* Demo1 : Regular completions (ChatCompletion)
-* Demo2 : Function calling and Retrival Augmented Generation
-* Demo3 : Function calling and Retrival Augmented Generation with Microsoft Extensions AI for .NET
-* Demo4 : Semantic Kernel with Retrival Augmented Generation
-* Demo5 : Semantic Kernel with Agentes and Open Telemetry
-* Demo6 : Semantic Kernel with MCP client that uses the McpServer as a backend
-* Indexer : An example of how to index data into Azure AI Search.
-* McpServer: An example MCP Server that can be used by LLMs. [MCP](https://modelcontextprotocol.io)
+Demo repo for showcasing how to use Azure OpenAI services with various frameworks and patterns.
+
+## Demos
+
+### Core Azure OpenAI Patterns
+* **Demo1**: Basic Azure OpenAI ChatCompletion - Simple chat interface using the Azure OpenAI SDK
+* **Demo2**: Function Calling + RAG - Demonstrates function calling with Retrieval Augmented Generation using Azure AI Search
+* **Demo3**: Microsoft.Extensions.AI + RAG - Same functionality as Demo2 but using the new Microsoft.Extensions.AI libraries for .NET
+
+### Semantic Kernel Demos
+* **Demo4**: Semantic Kernel with RAG - Plugin-based architecture using Semantic Kernel with Azure AI Search integration
+* **Demo5**: Semantic Kernel with Agents - Multi-agent conversation system with OpenTelemetry observability
+* **Demo6**: Semantic Kernel + Custom MCP - Integration with Model Context Protocol using a custom MCP server
+
+### MCP (Model Context Protocol) Integration
+* **Demo7**: GitHub MCP Server - Function calling using the official GitHub MCP server for repository interactions
+* **Demo8**: Azure Foundry Agent Service - Advanced agent service with MCP server integration on Azure Foundry
+
+### Utility Projects
+* **indexer**: SWAPI Data Indexer - Indexes Star Wars API data into Azure AI Search for use by the RAG demos
+* **McpToolServer**: Custom MCP Server - Example Model Context Protocol server implementation ([Learn about MCP](https://modelcontextprotocol.io))
+* **ghcopilotsandbox**: GitHub Copilot Sandbox - Experimental project for GitHub Copilot features
 
 **Disclaimer**: This is a demo repo and not intended for production use.

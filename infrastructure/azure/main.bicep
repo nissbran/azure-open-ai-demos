@@ -9,11 +9,21 @@ resource group 'Microsoft.Resources/resourceGroups@2023-07-01' = {
   location: location
 }
 
-module openai 'modules/azure-openai.bicep' = {
-  name: 'openai'
+// module openai 'modules/azure-openai.bicep' = {
+//   name: 'openai'
+//   scope: group
+//   params: {
+//     nameSuffix: name
+//     location: location
+//   }
+// }
+
+module foundry 'modules/foundry.bicep' = {
+  name: 'foundry'
   scope: group
   params: {
-    nameSuffix: name
+    hubName: 'foundry-${name}'
+    projectName: 'project-${name}'
     location: location
   }
 }

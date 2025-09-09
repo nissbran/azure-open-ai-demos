@@ -15,22 +15,20 @@ namespace Demo1;
 
 public class ChatService
 {
-    private readonly OpenAIClient _client;
     private readonly ChatClient _chatClient;
-    private readonly string _model;
-    
+
     private readonly ChatMessage _systemMessage = new SystemChatMessage(
         "You are a helpful assistant. You will talk like a pirate. ");
-    private readonly List<ChatMessage> _memory = new();
+    private readonly List<ChatMessage> _memory = [];
     
     public ChatService(IConfiguration configuration)
     {
         var apiKey = configuration["AzureOpenAI:ApiKey"];
         var endpoint = configuration["AzureOpenAI:Endpoint"];
-        _model = configuration["AzureOpenAI:ChatModel"];
-        _client = new AzureOpenAIClient(new Uri(endpoint), new AzureKeyCredential(apiKey));
+        var model = configuration["AzureOpenAI:ChatModel"];
+        OpenAIClient client = new AzureOpenAIClient(new Uri(endpoint), new AzureKeyCredential(apiKey));
         _memory.Add(_systemMessage);
-        _chatClient = _client.GetChatClient(_model);
+        _chatClient = client.GetChatClient(model);
     }
 
     public void StartNewSession()

@@ -108,15 +108,18 @@ public class ChatWithAgentsService
     public async Task PrintTheChatAsync()
     {
         Log.Information("Starting to print the chat history");
-
-        var history = await _chat.GetChatMessagesAsync().ToListAsync();
-
-        history.Reverse();
-
-        foreach (var message in history)
+        
+        await foreach(var message in _chat.GetChatMessagesAsync())
         {
             Log.Information("Role: {Role}, Message: {Message}", message.Role, message.Content);
         }
+        //
+        // history.Reverse();
+        //
+        // foreach (var message in history)
+        // {
+        //     Log.Information("Role: {Role}, Message: {Message}", message.Role, message.Content);
+        // }
     }
 
     public async Task<string> TypeMessageAsync(string message, CancellationToken cancellationToken = default)

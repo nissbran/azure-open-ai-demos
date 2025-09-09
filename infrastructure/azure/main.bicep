@@ -1,7 +1,6 @@
 targetScope = 'subscription'
 
 param location string = deployment().location
-param searchLocationOverride string = 'westeurope'
 param name string
 
 resource group 'Microsoft.Resources/resourceGroups@2023-07-01' = {
@@ -33,7 +32,7 @@ module search 'modules/search-services.bicep' = {
   scope: group
   params: {
     nameSuffix: name
-    location: searchLocationOverride
+    location: location
   }
 }
 

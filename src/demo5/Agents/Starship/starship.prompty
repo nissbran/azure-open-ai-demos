@@ -8,7 +8,7 @@ model:
   parameters:
     max_tokens: 2000
 sample:
-  starships: ${file:starships.json}
+  #starships: ${file:starships.json}
   instructions: "What is the biggest star wars ship?"
 inputs: 
   instructions:

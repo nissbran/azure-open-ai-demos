@@ -4,6 +4,9 @@ using McpToolServer.Tools;
 using Serilog;
 using Serilog.Sinks.SystemConsole.Themes;
 
+// Load .env file if it exists
+DotNetEnv.Env.TraversePath().Load();
+
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseSerilog((context, configuration) =>
 {
@@ -12,7 +15,10 @@ builder.Host.UseSerilog((context, configuration) =>
         .Enrich.FromLogContext()
         .WriteTo.Console(theme: AnsiConsoleTheme.Sixteen);
 });
-builder.Configuration.AddJsonFile("appsettings.local.json", true);
+builder.Configuration
+    .AddEnvironmentVariables()
+    .AddUserSecrets<Program>()
+    .AddJsonFile("appsettings.local.json", true);
 
 builder.Services.AddSingleton(provider =>
 {

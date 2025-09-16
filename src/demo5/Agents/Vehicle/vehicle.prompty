@@ -7,8 +7,8 @@ model:
     type: azure_openai
   parameters:
     max_tokens: 2000
-sample:
-  vehicles: ${file:vehicles.json}
+#sample:
+  #vehicles: ${file:vehicles.json}
 inputs: 
   instructions:
     type: string

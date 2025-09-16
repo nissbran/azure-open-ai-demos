@@ -32,12 +32,12 @@ public class ChatWithSemanticKernelService
         var apiKey = configuration["AzureOpenAI:ApiKey"] ?? throw new ArgumentNullException(nameof(configuration), "ApiKey configuration is missing.");
         var endpoint = configuration["AzureOpenAI:Endpoint"] ?? throw new ArgumentNullException(nameof(configuration), "Endpoint configuration is missing.");
         
-        
         var builder = Kernel.CreateBuilder().AddAzureOpenAIChatCompletion(model, endpoint, apiKey);
         
         _kernel = builder.Build();
         _chatCompletionService = _kernel.GetRequiredService<IChatCompletionService>();
-        _kernel.Plugins.AddFromType<SwapiShipApiPlugin>();
+        var swapiShipApiPlugin = new SwapiShipApiPlugin(configuration);
+        _kernel.Plugins.AddFromObject(swapiShipApiPlugin);
         var swapiAzureAiSearchPlugin = new VehicleSearchPlugin(configuration);
         _kernel.Plugins.AddFromObject(swapiAzureAiSearchPlugin);
         _chatHistoryReducer = new ChatHistorySummarizationReducer(_chatCompletionService, ReducerTarget, HistoryLimit);

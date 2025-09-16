@@ -12,17 +12,17 @@ namespace Demo3;
 public class ChatWithFunctionsService
 {
     private readonly IChatClient _chatClient;
-    private readonly string _model;
 
     private readonly List<ChatMessage> _memory = new();
 
-    private readonly SwapiShipApiFunction _swapiApiFunction = new();
+    private readonly SwapiShipApiFunction _swapiApiFunction;
     private readonly VehicleSearchFunction _vehicleSearchFunction;
 
     public ChatWithFunctionsService([FromKeyedServices("StarWars")] IChatClient chatClient, IConfiguration configuration)
     {
         _chatClient = chatClient;
         _vehicleSearchFunction = new VehicleSearchFunction(configuration);
+        _swapiApiFunction = new SwapiShipApiFunction(configuration);
     }
 
     public void StartNewSession()

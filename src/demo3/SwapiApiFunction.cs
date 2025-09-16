@@ -7,6 +7,7 @@ using System.Text.Encodings.Web;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.Extensions.AI;
+using Microsoft.Extensions.Configuration;
 using Serilog;
 
 namespace Demo3;
@@ -14,12 +15,12 @@ namespace Demo3;
 public class SwapiShipApiFunction
 {
     private readonly HttpClient _httpClient;
-    private const string BaseUrl = "https://swapi.dev/api/";
     public const string FunctionName = "call_starwars_api";
 
-    public SwapiShipApiFunction()
+    public SwapiShipApiFunction(IConfiguration configuration)
     {
-        _httpClient = new HttpClient() { BaseAddress = new Uri(BaseUrl) };
+        var baseUrl  = configuration["Swapi:BaseUrl"] ?? "https://swapi.info/api/";
+        _httpClient = new HttpClient() { BaseAddress = new Uri(baseUrl) };
     }
 
     public AITool GetFunctionDefinition()
@@ -30,11 +31,12 @@ public class SwapiShipApiFunction
     [Description("Gets Star Wars starship information")]
     public async Task<string> GetShipInformation(SwapiShipApiFunctionParameters parameters)
     {
-        Log.Information("Searching for starship with name {ShipName}", parameters.ShipName);
-        var response = await _httpClient.GetFromJsonAsync<SwapiResponse>($"starships?search={UrlEncoder.Default.Encode(parameters.ShipName)}");
-        var ship = response.count == 0 ? "No starship found with that name." : ToGptReadable(response.results[0]);
-        Log.Information("Returning ship information: {Ship}", ship);
-        return ship;
+        Log.Verbose("Searching for starship with name {ShipName}", parameters.ShipName);
+        var response = await _httpClient.GetFromJsonAsync<List<StarShip>>($"starships");
+        var ship = response.Find(starShip => starShip.name == parameters.ShipName);
+        var result = ship == null ? "No starship found with that name." : ToGptReadable(ship);
+        Log.Verbose("Returning ship information: {Ship}", result);
+        return result;
     }
 
     private static string ToGptReadable(StarShip starShip)
@@ -50,12 +52,6 @@ public class SwapiShipApiFunction
         [Description("The name of the starship to search for")]
         public string ShipName { get; set; }
     }
-
-    private record SwapiResponse(
-        int count,
-        string next,
-        string previous,
-        List<StarShip> results);
 
     private record StarShip(
         string name,

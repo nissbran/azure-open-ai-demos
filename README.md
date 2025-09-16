@@ -2,6 +2,33 @@
 
 Demo repo for showcasing how to use Azure OpenAI services with various frameworks and patterns.
 
+## Prerequisites
+
+- An Azure subscription with access to Azure AI Foundry and Azure AI Search.
+- .NET 9 SDK installed.
+- An IDE such as Visual Studio or Visual Studio Code.
+- Azure CLI installed. [Install Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli)
+
+## Getting Started
+
+To use the demos, you need to set up the required infrastructure and configure the applications.
+1. **Deploy Infrastructure**: Follow the instructions in [Deploy Infrastructure](infrastructure/azure/ReadMe.md) to deploy the necessary Azure resources using Bicep.
+2. **Configure Environment Variables (choose one)**:
+-  Create a `.env` file in the root of the repo based on the `.env.example` file. Populate it with your Azure OpenAI and Azure AI Search credentials. 
+- **Or** Use [User Secrets](https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets) to manage sensitive configuration data during development. Replace the placeholders with your actual values (the id is the same for all demos):
+```bash
+dotnet user-secrets set "AzureOpenAI:Endpoint" "<your endpoint>" --id ca64dc64-4faf-43c1-87c2-3854d28b0ccd
+dotnet user-secrets set "AzureOpenAI:ApiKey" "<your api key>" --id ca64dc64-4faf-43c1-87c2-3854d28b0ccd
+dotnet user-secrets set "AzureOpenAI:ChatModel" "<your chat model>" --id ca64dc64-4faf-43c1-87c2-3854d28b0ccd
+dotnet user-secrets set "AzureOpenAI:EmbeddingModel" "<your embedding model>" --id ca64dc64-4faf-43c1-87c2-3854d28b0ccd
+dotnet user-secrets set "AzureAISearch:Endpoint" "<your endpoint>" --id ca64dc64-4faf-43c1-87c2-3854d28b0ccd
+dotnet user-secrets set "AzureAISearch:ApiKey" "<your api key>" --id ca64dc64-4faf-43c1-87c2-3854d28b0ccd
+```
+3. **Run a Demo**: Navigate to the desired demo folder (e.g., `src/demo1`) and run the application using the .NET CLI:
+```bash
+cd src/demo1
+dotnet run
+```
 ## Demos
 
 ### Core Azure OpenAI Patterns

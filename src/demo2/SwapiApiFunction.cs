@@ -6,6 +6,7 @@ using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 using OpenAI.Chat;
 using Serilog;
 
@@ -14,13 +15,14 @@ namespace Demo2;
 public class SwapiShipApiFunction : IGptFunction
 {
     private readonly HttpClient _httpClient;
-    private const string BaseUrl = "https://swapi.dev/api/";
     public const string FunctionName = "call_starwars_api";
 
-    public SwapiShipApiFunction()
+    public SwapiShipApiFunction(IConfiguration configuration)
     {
-        _httpClient = new HttpClient() { BaseAddress = new Uri(BaseUrl) };
+        var baseUrl  = configuration["Swapi:BaseUrl"] ?? "https://swapi.info/api/";
+        _httpClient = new HttpClient() { BaseAddress = new Uri(baseUrl) };
     }
+
 
     public ChatTool GetToolDefinition()
     {
@@ -48,8 +50,12 @@ public class SwapiShipApiFunction : IGptFunction
     {
         try
         {
-            var response = await _httpClient.GetFromJsonAsync<SwapiResponse>($"starships?search={UrlEncoder.Default.Encode(parameters.ShipName)}");
-            return response.count == 0 ? "No starship found with that name." : ToGptReadable(response.results[0]);
+            Log.Verbose("Searching for starship with name {ShipName}", parameters.ShipName);
+            var response = await _httpClient.GetFromJsonAsync<List<StarShip>>($"starships");
+            var ship = response.Find(starShip => starShip.name == parameters.ShipName);
+            var result = ship == null ? "No starship found with that name." : ToGptReadable(ship);
+            Log.Verbose("Returning ship information: {Ship}", result);
+            return result;
         }
         catch (Exception e)
         {
@@ -70,12 +76,6 @@ public class SwapiShipApiFunction : IGptFunction
         [JsonPropertyName("ship_name")] 
         public string ShipName { get; set; }
     }
-
-    private record SwapiResponse(
-        int count,
-        string next,
-        string previous,
-        List<StarShip> results);
 
     private record StarShip(
         string name,

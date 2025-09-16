@@ -5,12 +5,16 @@ using Serilog;
 using Serilog.Sinks.SystemConsole.Themes;
 using Spectre.Console;
 
+// Load .env file if it exists
+DotNetEnv.Env.TraversePath().Load();
+
 Console.OutputEncoding = System.Text.Encoding.UTF8;
 
 var configuration = new ConfigurationBuilder()
-    .AddEnvironmentVariables()
     .AddJsonFile("appsettings.json", false)
     .AddJsonFile("appsettings.local.json", true)
+    .AddEnvironmentVariables()
+    .AddUserSecrets<Program>()
     .Build();
 
 Log.Logger = new LoggerConfiguration()

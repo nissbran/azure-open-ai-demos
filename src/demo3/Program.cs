@@ -10,17 +10,21 @@ using Serilog;
 using Serilog.Sinks.SystemConsole.Themes;
 using Spectre.Console;
 
+// Load .env file if it exists
+DotNetEnv.Env.TraversePath().Load();
+
 Console.OutputEncoding = System.Text.Encoding.UTF8;
 
 var builder = Host.CreateApplicationBuilder();
 
 builder.Configuration
-    .AddEnvironmentVariables()
     .AddJsonFile("appsettings.json", false)
+    .AddEnvironmentVariables()
+    .AddUserSecrets<Program>()
     .AddJsonFile("appsettings.local.json", true);
 
-builder.Services.AddSerilog(configuration =>
-    configuration
+builder.Services.AddSerilog(logger =>
+    logger
         .MinimumLevel.Information()
         .ReadFrom.Configuration(builder.Configuration)
         .WriteTo.Console(theme: AnsiConsoleTheme.Sixteen));
@@ -34,6 +38,7 @@ builder.Services.AddKeyedChatClient("StarWars",
             .AsIChatClient())
     .UseFunctionInvocation()
     .UseLogging();
+
 builder.Services.AddSingleton<ChatWithFunctionsService>();
 
 // Create chat service

@@ -6,6 +6,7 @@ using System.Net.Http.Json;
 using System.Text.Encodings.Web;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 using Microsoft.SemanticKernel;
 using Serilog;
 
@@ -14,11 +15,11 @@ namespace Demo4;
 public class SwapiShipApiPlugin
 {
     private readonly HttpClient _httpClient;
-    private const string BaseUrl = "https://swapi.dev/api/";
 
-    public SwapiShipApiPlugin()
+    public SwapiShipApiPlugin(IConfiguration configuration)
     {
-        _httpClient = new HttpClient() { BaseAddress = new Uri(BaseUrl) };
+        var baseUrl  = configuration["Swapi:BaseUrl"] ?? "https://swapi.info/api/";
+        _httpClient = new HttpClient() { BaseAddress = new Uri(baseUrl) };
     }
 
     [KernelFunction("get_ship_information")]
@@ -27,10 +28,11 @@ public class SwapiShipApiPlugin
     public async Task<string> GetShipInformation(SwapiShipApiFunctionParameters parameters)
     {
         Log.Verbose("Searching for starship with name {ShipName}", parameters.ShipName);
-        var response = await _httpClient.GetFromJsonAsync<SwapiResponse>($"starships?search={UrlEncoder.Default.Encode(parameters.ShipName)}");
-        var ship = response.count == 0 ? "No starship found with that name." : ToGptReadable(response.results[0]);
-        Log.Verbose("Returning ship information: {Ship}", ship);
-        return ship;
+        var response = await _httpClient.GetFromJsonAsync<List<StarShip>>($"starships");
+        var ship = response.Find(starShip => starShip.name == parameters.ShipName);
+        var result = ship == null ? "No starship found with that name." : ToGptReadable(ship);
+        Log.Verbose("Returning ship information: {Ship}", result);
+        return result;
     }
 
     private static string ToGptReadable(StarShip starShip)

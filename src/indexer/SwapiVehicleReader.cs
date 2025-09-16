@@ -4,34 +4,36 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
+using Serilog;
 
 namespace SwapiIndexer;
 
 public class SwapiVehicleReader
 {
-    private readonly HttpClient _client = new HttpClient();
+    private readonly HttpClient _client;
+
+    public SwapiVehicleReader(IConfiguration configuration)
+    {
+        var swapiInfoApi = configuration["Swapi:BaseUrl"] ?? "https://swapi.info/api/";
+        _client = new HttpClient { BaseAddress = new Uri(swapiInfoApi) };
+    }
 
     public async Task<List<Vehicle>> GetVehicles()
     {
         var vehicles = new List<Vehicle>();
-        var response = await _client.GetFromJsonAsync<SwapiResponse>("https://swapi.dev/api/vehicles");
-        vehicles.AddRange(response.Results);
-        while (!string.IsNullOrEmpty(response.Next))
+        var response = await _client.GetFromJsonAsync<List<Vehicle>>("vehicles");
+        if (response != null)
         {
-            response = await _client.GetFromJsonAsync<SwapiResponse>(response.Next);
-            vehicles.AddRange(response.Results);
+            vehicles.AddRange(response);
+        }
+        else
+        {
+            Log.Error("Failed to get vehicles from SWAPI");
         }
 
         return vehicles;
     }
-}
-
-public class SwapiResponse
-{
-    public int Count { get; set; }
-    public string Next { get; set; }
-    public string Previous { get; set; }
-    public IEnumerable<Vehicle> Results { get; set; }
 }
 
 public class Vehicle

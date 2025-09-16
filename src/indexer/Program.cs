@@ -3,9 +3,13 @@ using Serilog;
 using Serilog.Sinks.SystemConsole.Themes;
 using SwapiIndexer;
 
+// Load .env file if it exists
+DotNetEnv.Env.TraversePath().Load();
+
 var configuration = new ConfigurationBuilder()
-    .AddEnvironmentVariables()
     .AddJsonFile("appsettings.json", false)
+    .AddEnvironmentVariables()
+    .AddUserSecrets<Program>()
     .AddJsonFile("appsettings.local.json", true)
     .Build();
 
@@ -15,7 +19,7 @@ Log.Logger = new LoggerConfiguration()
     .CreateLogger();
 
 // Initialize the services
-var vehicleReader = new SwapiVehicleReader();
+var vehicleReader = new SwapiVehicleReader(configuration);
 var vehicleSearchIndexCreator = new SwapiVehicleSearchIndexCreator(configuration);
 var vehicleSearchIndexer = new SwapiVehicleSearchIndexer(configuration);
 var vehicleVectorizer = new VehicleVectorizer(configuration);

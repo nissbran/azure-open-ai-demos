@@ -4,7 +4,10 @@ Azure OpenAI and RAG integration with Microsoft.Extension.AI libraries. Function
 
 ## To run
 
-Create a file called 'appsettings.local.json' in the root of the project with the content: 
+Use the instructions in the [main readme](../README.md) to deploy the infrastructure and set up environment variables or user secrets. It is also possible to use a local json file for configuration.
+
+
+If you prefer, create a file called `appsettings.local.json` in the root of the project with the content:
 ```json
 {
   "Serilog": {
@@ -27,4 +30,4 @@ Then run the application.
 
 ## To get verbose logging
 
-Switch the `MinimumLevel` to `Verbose` in the `appsettings.local.json` file.
+Switch the `MinimumLevel` to `Verbose` in the `appsettings.json` file or in environment variables.

@@ -4,9 +4,13 @@ using Serilog;
 using Serilog.Sinks.SystemConsole.Themes;
 using Spectre.Console;
 
+// Load .env file if it exists
+DotNetEnv.Env.TraversePath().Load();
+
 var configuration = new ConfigurationBuilder()
-    .AddEnvironmentVariables()
     .AddJsonFile("appsettings.json", false)
+    .AddEnvironmentVariables()
+    .AddUserSecrets<Program>()
     .AddJsonFile("appsettings.local.json", true)
     .Build();
 

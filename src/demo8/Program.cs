@@ -5,6 +5,9 @@ using Serilog;
 using Serilog.Sinks.SystemConsole.Themes;
 using Spectre.Console;
 
+// Load .env file if it exists
+DotNetEnv.Env.TraversePath().Load();
+
 Console.OutputEncoding = System.Text.Encoding.UTF8;
 
 

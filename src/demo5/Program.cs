@@ -9,12 +9,15 @@ using OpenTelemetry.Trace;
 using Serilog;
 using Serilog.Sinks.SystemConsole.Themes;
 
+// Load .env file if it exists
+DotNetEnv.Env.TraversePath().Load();
+
 Console.OutputEncoding = System.Text.Encoding.UTF8;
 
 var configuration = new ConfigurationBuilder()
+    .AddJsonFile("appsettings.json", false)
     .AddEnvironmentVariables()
     .AddUserSecrets<Program>()
-    .AddJsonFile("appsettings.json", false)
     .AddJsonFile("appsettings.local.json", true)
     .Build();
 

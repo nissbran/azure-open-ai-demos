@@ -18,7 +18,9 @@ public class SwapiVehicleSearchIndexCreator
     private const string AlgorithmConfigName = "summary-alg-config";
     
     private const string VectorizerName = "openai";
-    private const int ModelDimensions = 3072;
+    private const int LargeModelDimensions = 3072;
+    private const int SmallModelDimensions = 1536;
+    private readonly int _modelDimensions;
     private readonly string _embeddingModel;
     private readonly Uri _openAIResourceUri;
     private readonly string _openAIApiKey;
@@ -28,6 +30,8 @@ public class SwapiVehicleSearchIndexCreator
         _openAIResourceUri = new Uri(configuration["AzureOpenAI:Endpoint"]);
         _openAIApiKey = configuration["AzureOpenAI:ApiKey"];
         _embeddingModel = configuration["AzureOpenAI:EmbeddingModel"];
+        
+        _modelDimensions = _embeddingModel == AzureOpenAIModelName.TextEmbedding3Large ? LargeModelDimensions : SmallModelDimensions;
         
         var endpoint = new Uri(configuration["AzureAISearch:Endpoint"]);
         var credential = new AzureKeyCredential(configuration["AzureAISearch:ApiKey"]);
@@ -49,7 +53,7 @@ public class SwapiVehicleSearchIndexCreator
                 new SearchField("summary_vector", SearchFieldDataType.Collection(SearchFieldDataType.Single))
                 {
                     IsSearchable = true,
-                    VectorSearchDimensions = ModelDimensions,
+                    VectorSearchDimensions = _modelDimensions,
                     VectorSearchProfileName = VectorConfigName
                 },
             },

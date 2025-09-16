@@ -10,14 +10,14 @@ namespace McpToolServer.Tools;
 public sealed class VehicleSearchTool
 {
     [McpServerTool, Description("Searches for a vehicle in Star Wars.")]
-    public static async Task<string> Search(
-        SearchClient seachClient,
+    public static async Task<string> SearchVehicles(
+        SearchClient searchClient,
         ILogger<VehicleSearchTool> logger,
         [Description("The search query for the vehicle, e.g. speeder bike")]
         string searchQuery)
     {
         logger.LogInformation("Searching for vehicles with query {SearchQuery}", searchQuery);
-        var searchResponse = await seachClient.SearchAsync<VehicleSearchResult>(searchQuery, new SearchOptions()
+        var searchResponse = await searchClient.SearchAsync<VehicleSearchResult>(searchQuery, new SearchOptions()
         {
             QueryType = SearchQueryType.Full,
             VectorSearch = new VectorSearchOptions
@@ -26,7 +26,7 @@ public sealed class VehicleSearchTool
                 {
                     new VectorizableTextQuery(searchQuery)
                     {
-                        KNearestNeighborsCount = 3,
+                        KNearestNeighborsCount = 5,
                         Fields = { "summary_vector" }
                     }
                 }
@@ -52,12 +52,6 @@ public sealed class VehicleSearchTool
         logger.LogInformation("Search result: {Summary}", json);
 
         return json;
-    }
-
-    [McpServerTool, Description("Echoes the input back to the client.")]
-    public static string Echo([Description("The message to echo")] string message)
-    {
-        return "Echo: " + message;
     }
 
     private record VehicleSearchResult(

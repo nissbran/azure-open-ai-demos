@@ -18,11 +18,12 @@ public sealed class ShipTool
         
         var httpClient = httpClientFactory.CreateClient("SwapiClient");
         
-        var response = await httpClient.GetFromJsonAsync<SwapiResponse>($"starships?search={UrlEncoder.Default.Encode(shipName)}");
-        var ship = response?.count == 0 ? "No starship found with that name." : ToGptReadable(response!.results[0]);
+        var response = await httpClient.GetFromJsonAsync<List<StarShip>>("starships");
+        var ship = response?.Find(starShip => string.Compare(starShip.name, shipName, StringComparison.InvariantCultureIgnoreCase) == 0);
+        var result = ship == null ? "No starship found with that name." : ToGptReadable(ship);
         
         logger.LogInformation("Returning ship information: {Ship}", ship);
-        return ship;
+        return result;
     }
     
     private static string ToGptReadable(StarShip starShip)
@@ -32,12 +33,6 @@ public sealed class ShipTool
                $"Starship class: {starShip.starship_class}, Pilots: {string.Join(", ", starShip.pilots)}, Films: {string.Join(", ", starShip.films)}";
     }
     
-    private record SwapiResponse(
-        int count,
-        string next,
-        string previous,
-        List<StarShip> results);
-
     private record StarShip(
         string name,
         string model,

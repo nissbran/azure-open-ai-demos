@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Azure;
 using Azure.AI.OpenAI;
 using Microsoft.Extensions.Configuration;
 using OpenAI;
@@ -15,26 +14,25 @@ namespace Demo2;
 
 public class ChatWithFunctionsService
 {
-    private readonly OpenAIClient _client;
     private readonly ChatClient _chatClient;
-    private readonly string _model;
 
     private readonly ChatMessage _systemMessage = new SystemChatMessage(
         "You are a helpful assistant that helps find information about starships and vehicles in Star Wars.");
 
     private readonly List<ChatMessage> _memory = new();
 
-    private readonly SwapiShipApiFunction _swapiApiFunction = new();
+    private readonly SwapiShipApiFunction _swapiApiFunction;
     private readonly VehicleSearchFunction _vehicleSearchFunction;
 
     public ChatWithFunctionsService(IConfiguration configuration)
     {
         var apiKey = configuration["AzureOpenAI:ApiKey"];
         var endpoint = configuration["AzureOpenAI:Endpoint"];
-        _model = configuration["AzureOpenAI:ChatModel"];
-        _client = new AzureOpenAIClient(new Uri(endpoint), new ApiKeyCredential(apiKey));
+        var model = configuration["AzureOpenAI:ChatModel"];
+        OpenAIClient client = new AzureOpenAIClient(new Uri(endpoint), new ApiKeyCredential(apiKey));
         _vehicleSearchFunction = new VehicleSearchFunction(configuration);
-        _chatClient = _client.GetChatClient(_model);
+        _swapiApiFunction = new SwapiShipApiFunction(configuration);
+        _chatClient = client.GetChatClient(model);
     }
 
     public void StartNewSession()

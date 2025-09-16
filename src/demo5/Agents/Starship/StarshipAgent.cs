@@ -24,7 +24,7 @@ namespace Demo5.Agents.Starship
             
             var starshipKernel = kernel.Clone();
             
-            var apiPlugin = new SwapiShipApiPlugin();
+            var apiPlugin = new SwapiShipApiPlugin(configuration);
             starshipKernel.Plugins.AddFromObject(apiPlugin);
             
             ChatCompletionAgent vehicleAgent = new(writerTemplateConfig, new LiquidPromptTemplateFactory())
@@ -42,7 +42,5 @@ namespace Demo5.Agents.Starship
                 };
             return vehicleAgent;
         }
-        
-        //public static ChatCompletionAgent Create
     }
 }

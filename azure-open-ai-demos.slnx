@@ -1,0 +1,31 @@
+<Solution>
+  <Folder Name="/demos/">
+    <Project Path="src/demo1/Demo1-AzureOpenAI-SDK.csproj" />
+    <Project Path="src/demo2/Demo2-FunctionCalling-RAG.csproj" />
+    <Project Path="src/demo3/Demo3-MEAI-FunctionCalling-RAG.csproj" />
+    <Project Path="src/demo4/Demo4-SemanticKernel-RAG.csproj" />
+    <Project Path="src/demo5/Demo5-SemanticKernel-Agents-Otel.csproj" />
+    <Project Path="src/demo6/Demo6-Mcp.csproj" />
+    <Project Path="src/demo7/Demo7-Mcp-Github.csproj" />
+    <Project Path="src/demo8/Demo8-AgentService.csproj" />
+    <Project Path="src/demo9/Demo9-Magentic-Multi-Agents.csproj" />
+  </Folder>
+  <Folder Name="/mcp-servers/">
+      <Project Path="src/McpToolServer/McpToolServer.csproj" />
+      <Project Path="src/McpInstructionsSupportServer/McpInstructionsSupportServer.csproj" />
+  </Folder>
+    <Folder Name="/indexers/">
+      <Project Path="src/indexer/SwapiIndexer.csproj" />
+    </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path="README.md" />
+    <File Path="LICENSE" />
+    <File Path="demo.json" />
+    <File Path="httptest.http" />
+  </Folder>
+  <Folder Name="/infrastructure/">
+    <File Path="infrastructure/azure/main.bicep" />
+    <File Path="infrastructure/azure/main.bicepparam" />
+    <File Path="infrastructure/azure/ReadMe.md" />
+  </Folder>
+</Solution>

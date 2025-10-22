@@ -1,0 +1,28 @@
+Brand,Truck_Model,Part_Number,Part_Name,Part_Type,Quantity
+Contoso,Hauler 500,ENG007,High-Performance Diesel Block Model-2,Engine,1
+Contoso,Hauler 500,TIR008,Long-Haul Steer Tire Model-2,Tire,4
+Contoso,Hauler 500,BRK002,Air Disc Brake System Model-1,Brakes,2
+Contoso,Hauler 500,BRK005,Hydraulic Disc Brake Kit Model-2,Brakes,2
+Contoso,Hauler 500,SUS011,Adjustable Air Suspension Model-2,Suspension,1
+Contoso,Hauler 500,ECU003,Fleet Monitoring ECU Model-1,ECU,1
+Contoso,Hauler 500,RAD003,Radiator Model-3,Cooling,1
+Contoso,Hauler 500,BAT001,Battery Model-1,Battery,1
+Contoso,Hauler 500,TRN008,Automated Manual Transmission Unit Model-3,Transmission,1
+Contoso,Ranger X,ENG005,V6 Turbocharged Diesel Model-1,Engine,1
+Contoso,Ranger X,TIR004,Heavy-Duty Off-Road Tire Model-1,Tire,4
+Contoso,Ranger X,BRK009,Air Disc Brake System Model-2,Brakes,2
+Contoso,Ranger X,BRK001,Dual-Circuit Air Brake Model-1,Brakes,2
+Contoso,Ranger X,SUS001,Hydraulic Suspension Module Model-1,Suspension,1
+Contoso,Ranger X,ECU004,CAN-Bus Enabled ECU Model-1,ECU,1
+Contoso,Ranger X,RAD013,Radiator Model-13,Cooling,1
+Contoso,Ranger X,BAT003,Battery Model-3,Battery,1
+Contoso,Ranger X,TRN006,Dual-Clutch Transmission System Model-2,Transmission,1
+Contoso,Titan Pro,ENG010,Heavy-Duty Inline-4 Engine Model-2,Engine,1
+Contoso,Titan Pro,TIR011,Deep Tread Commercial Tire Model-2,Tire,4
+Contoso,Titan Pro,BRK004,Heavy-Duty Brake Caliper Model-1,Brakes,2
+Contoso,Titan Pro,BRK007,Hydraulic Drum Brakes Model-1,Brakes,2
+Contoso,Titan Pro,SUS003,Heavy-Duty Shock Absorber Model-2,Suspension,1
+Contoso,Titan Pro,ECU006,Multi-Channel ECU Model-1,ECU,1
+Contoso,Titan Pro,RAD009,Radiator Model-9,Cooling,1
+Contoso,Titan Pro,BAT006,Battery Model-6,Battery,1
+Contoso,Titan Pro,TRN004,Dual-Clutch Transmission System Model-1,Transmission,1

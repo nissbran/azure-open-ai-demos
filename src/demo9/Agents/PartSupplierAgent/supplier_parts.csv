@@ -1,0 +1,101 @@
+Part_Number,Part_Name,Part_Type,Category,Supplier,Unit_Cost,Lead_time_weeks,Country_of_Origin,Warranty_Period_months,Stock_Status
+ENG001,V6 Intercooled Diesel Model-1,Engine,Powertrain,AutoParts Co.,3300,1,South Korea,9,In Stock
+ECU001,Electronic Control Hub Model-1,Steering,Electronics,HeavyDuty Supplies,3100,10,Germany,6,Out of Stock
+RAD001,Radiator Model-1,Cooling,Cooling,FleetGear Ltd.,800,11,South Korea,35,Out of Stock
+SUS001,Hydraulic Suspension Module Model-1,Suspension,Chassis,FleetGear Ltd.,950,6,Mexico,10,Limited Stock
+TRN001,High-Torque Transmission Box Model-1,Transmission,Powertrain,HeavyDuty Supplies,4200,10,Germany,31,In Stock
+ENG002,Heavy-Duty Inline-4 Engine Model-1,Engine,Powertrain,HeavyDuty Supplies,3300,12,Japan,20,Limited Stock
+ECU002,Advanced Vehicle Control Module Model-1,Steering,Electronics,HeavyDuty Supplies,4000,4,Mexico,19,Limited Stock
+BRK001,Dual-Circuit Air Brake Model-1,Brakes,Safety,AutoParts Co.,200,10,USA,30,Limited Stock
+STG001,Steering System Model-1,Steering,Control,HeavyDuty Supplies,3100,12,Japan,16,Limited Stock
+TRN002,Automated Manual Transmission Unit Model-1,Transmission,Powertrain,TruckTech Inc.,3400,9,Japan,14,Limited Stock
+BAT001,Battery Model-1,Battery,Electrical,AutoParts Co.,1200,10,Japan,11,Out of Stock
+ENG003,V8 Twin-Turbo Diesel Model-1,Engine,Powertrain,AutoParts Co.,4100,8,South Korea,8,In Stock
+RAD002,Radiator Model-2,Cooling,Cooling,HeavyDuty Supplies,1400,9,South Korea,18,In Stock
+SUS002,Heavy-Duty Shock Absorber Model-1,Suspension,Chassis,HeavyDuty Supplies,3600,5,Mexico,6,In Stock
+RAD003,Radiator Model-3,Cooling,Cooling,FleetGear Ltd.,2000,5,Germany,10,Out of Stock
+STG002,Steering System Model-2,Steering,Control,TruckTech Inc.,2700,4,Japan,26,In Stock
+TIR001,High-Traction Drive Axle Tire Model-1,Tire,Wheels,FleetGear Ltd.,2500,3,Mexico,17,Limited Stock
+ENG004,V8 Twin-Turbo Diesel Model-2,Engine,Powertrain,RoadMaster Components,1200,11,Germany,32,In Stock
+ENG005,V6 Turbocharged Diesel Model-1,Engine,Powertrain,AutoParts Co.,3300,9,South Korea,17,Limited Stock
+TIR002,Deep Tread Commercial Tire Model-1,Tire,Wheels,AutoParts Co.,150,8,USA,22,In Stock
+RAD004,Radiator Model-4,Cooling,Cooling,HeavyDuty Supplies,3300,9,Canada,11,Limited Stock
+SUS003,Heavy-Duty Shock Absorber Model-2,Suspension,Chassis,RoadMaster Components,1200,6,USA,22,In Stock
+ALT001,Alternator Model-1,Alternator,Electrical,FleetGear Ltd.,300,3,USA,22,Out of Stock
+RAD005,Radiator Model-5,Cooling,Cooling,RoadMaster Components,1300,12,USA,36,Limited Stock
+SUS004,Trailing Arm Suspension System Model-1,Suspension,Chassis,FleetGear Ltd.,700,2,Canada,10,Out of Stock
+SUS005,Electronic Suspension Control Unit Model-1,Steering,Chassis,RoadMaster Components,2000,9,Mexico,14,Limited Stock
+BAT002,Battery Model-2,Battery,Electrical,TruckTech Inc.,4600,12,Japan,24,Limited Stock
+BRK002,Air Disc Brake System Model-1,Brakes,Safety,AutoParts Co.,2400,12,Germany,19,In Stock
+ECU003,Fleet Monitoring ECU Model-1,ECU,Electronics,AutoParts Co.,650,1,USA,30,Limited Stock
+STG003,Steering System Model-3,Steering,Control,TruckTech Inc.,4500,11,Canada,12,In Stock
+BRK003,Hydraulic Disc Brake Kit Model-1,Brakes,Safety,HeavyDuty Supplies,4000,8,Canada,18,Limited Stock
+BRK004,Heavy-Duty Brake Caliper Model-1,Brakes,Safety,AutoParts Co.,1200,1,South Korea,32,Out of Stock
+TIR003,Fuel-Efficient Highway Tire Model-1,Tire,Wheels,FleetGear Ltd.,3000,3,Canada,26,Limited Stock
+TIR004,Heavy-Duty Off-Road Tire Model-1,Tire,Wheels,HeavyDuty Supplies,4200,6,Mexico,23,In Stock
+TIR005,All-Terrain Load Tire Model-1,Tire,Wheels,HeavyDuty Supplies,4300,10,Canada,26,Out of Stock
+STG004,Steering System Model-4,Steering,Control,FleetGear Ltd.,3600,8,South Korea,13,Limited Stock
+SUS006,Trailing Arm Suspension System Model-2,Suspension,Chassis,FleetGear Ltd.,1600,11,South Korea,20,Out of Stock
+ENG006,High-Performance Diesel Block Model-1,Engine,Powertrain,FleetGear Ltd.,1400,1,Germany,21,Out of Stock
+BAT003,Battery Model-3,Battery,Electrical,HeavyDuty Supplies,4100,9,South Korea,22,In Stock
+BRK005,Hydraulic Disc Brake Kit Model-2,Brakes,Safety,TruckTech Inc.,2800,12,Japan,13,Limited Stock
+SUS007,Adjustable Air Suspension Model-1,Suspension,Chassis,TruckTech Inc.,250,2,Mexico,18,Out of Stock
+ENG007,High-Performance Diesel Block Model-2,Engine,Powertrain,AutoParts Co.,4100,6,Canada,27,Limited Stock
+ALT002,Alternator Model-2,Alternator,Electrical,AutoParts Co.,700,6,Japan,8,In Stock
+BRK006,Pneumatic Brake Module Model-1,Brakes,Safety,AutoParts Co.,3800,11,Germany,32,Out of Stock
+RAD006,Radiator Model-6,Cooling,Cooling,HeavyDuty Supplies,400,10,South Korea,17,Limited Stock
+ALT003,Alternator Model-3,Alternator,Electrical,TruckTech Inc.,1200,3,USA,6,Out of Stock
+TIR006,Long-Haul Steer Tire Model-1,Tire,Wheels,FleetGear Ltd.,3600,8,Mexico,8,In Stock
+ALT004,Alternator Model-4,Alternator,Electrical,TruckTech Inc.,1300,10,Japan,19,Limited Stock
+SUS008,Spring and Damper Kit Model-1,Other,Chassis,HeavyDuty Supplies,3500,12,USA,16,Out of Stock
+RAD007,Radiator Model-7,Cooling,Cooling,RoadMaster Components,1800,2,Japan,20,In Stock
+ENG008,V6 Intercooled Diesel Model-2,Engine,Powertrain,TruckTech Inc.,4200,2,Canada,31,Out of Stock
+TRN003,Integrated Transmission Controller Model-1,Steering,Powertrain,RoadMaster Components,4300,2,South Korea,31,Limited Stock
+SUS009,Spring and Damper Kit Model-2,Other,Chassis,FleetGear Ltd.,800,6,Canada,18,In Stock
+ALT005,Alternator Model-5,Alternator,Electrical,TruckTech Inc.,3400,9,Germany,31,Limited Stock
+ALT006,Alternator Model-6,Alternator,Electrical,FleetGear Ltd.,4300,9,Germany,16,Out of Stock
+STG005,Steering System Model-5,Steering,Control,HeavyDuty Supplies,4800,2,South Korea,6,In Stock
+TIR007,Fuel-Efficient Highway Tire Model-2,Tire,Wheels,HeavyDuty Supplies,1300,3,South Korea,15,Out of Stock
+BAT004,Battery Model-4,Battery,Electrical,FleetGear Ltd.,2200,10,USA,16,In Stock
+BAT005,Battery Model-5,Battery,Electrical,TruckTech Inc.,4500,6,Japan,11,Out of Stock
+RAD008,Radiator Model-8,Cooling,Cooling,TruckTech Inc.,2700,1,Mexico,22,Out of Stock
+ECU004,CAN-Bus Enabled ECU Model-1,ECU,Electronics,TruckTech Inc.,550,5,South Korea,12,In Stock
+BAT006,Battery Model-6,Battery,Electrical,HeavyDuty Supplies,2400,2,Japan,19,Out of Stock
+ECU005,Smart Truck ECU Model-1,ECU,Electronics,RoadMaster Components,3300,6,Mexico,29,Limited Stock
+TIR008,Long-Haul Steer Tire Model-2,Tire,Wheels,RoadMaster Components,3500,7,South Korea,30,Out of Stock
+ENG009,V6 Turbocharged Diesel Model-2,Engine,Powertrain,HeavyDuty Supplies,2100,12,USA,30,Out of Stock
+RAD009,Radiator Model-9,Cooling,Cooling,HeavyDuty Supplies,3600,5,Japan,15,Out of Stock
+TRN004,Dual-Clutch Transmission System Model-1,Transmission,Powertrain,HeavyDuty Supplies,4100,9,South Korea,31,In Stock
+ALT007,Alternator Model-7,Alternator,Electrical,TruckTech Inc.,3000,4,Japan,16,Out of Stock
+ALT008,Alternator Model-8,Alternator,Electrical,HeavyDuty Supplies,650,6,Germany,22,In Stock
+SUS010,Hydraulic Suspension Module Model-2,Suspension,Chassis,RoadMaster Components,4900,9,Germany,6,Limited Stock
+BAT007,Battery Model-7,Battery,Electrical,AutoParts Co.,1900,4,Mexico,11,In Stock
+BAT008,Battery Model-8,Battery,Electrical,FleetGear Ltd.,1000,4,South Korea,12,Out of Stock
+TIR009,High-Traction Drive Axle Tire Model-2,Tire,Wheels,TruckTech Inc.,2000,11,USA,16,Limited Stock
+ECU006,Multi-Channel ECU Model-1,ECU,Electronics,AutoParts Co.,2900,5,South Korea,34,In Stock
+TIR010,High-Traction Drive Axle Tire Model-3,Tire,Wheels,RoadMaster Components,3700,7,Canada,23,In Stock
+ALT009,Alternator Model-9,Alternator,Electrical,HeavyDuty Supplies,2200,8,Canada,29,Limited Stock
+RAD010,Radiator Model-10,Cooling,Cooling,FleetGear Ltd.,500,7,Germany,30,In Stock
+STG006,Steering System Model-6,Steering,Control,HeavyDuty Supplies,950,6,Canada,19,In Stock
+TIR011,Deep Tread Commercial Tire Model-2,Tire,Wheels,FleetGear Ltd.,4300,1,Germany,10,In Stock
+BRK007,Hydraulic Drum Brakes Model-1,Brakes,Safety,HeavyDuty Supplies,1800,6,South Korea,35,Limited Stock
+TRN005,Automated Manual Transmission Unit Model-2,Transmission,Powertrain,FleetGear Ltd.,4100,12,Canada,17,Limited Stock
+SUS011,Adjustable Air Suspension Model-2,Suspension,Chassis,AutoParts Co.,2400,7,USA,35,Out of Stock
+SUS012,Electronic Suspension Control Unit Model-2,Steering,Chassis,AutoParts Co.,900,4,South Korea,24,Out of Stock
+BAT009,Battery Model-9,Battery,Electrical,HeavyDuty Supplies,3200,11,Germany,23,Limited Stock
+TRN006,Dual-Clutch Transmission System Model-2,Transmission,Powertrain,FleetGear Ltd.,2200,1,Germany,24,In Stock
+ENG010,Heavy-Duty Inline-4 Engine Model-2,Engine,Powertrain,AutoParts Co.,4300,4,USA,26,Limited Stock
+TIR012,High-Traction Drive Axle Tire Model-4,Tire,Wheels,RoadMaster Components,1700,7,South Korea,23,Out of Stock
+TIR013,Heavy-Duty Off-Road Tire Model-2,Tire,Wheels,TruckTech Inc.,3200,2,USA,34,Limited Stock
+RAD011,Radiator Model-11,Cooling,Cooling,HeavyDuty Supplies,1800,7,Japan,21,Limited Stock
+ENG011,High-Performance Diesel Block Model-3,Engine,Powertrain,HeavyDuty Supplies,3000,3,Mexico,8,Limited Stock
+TRN007,Multi-Speed Gear Train Model-1,Transmission,Powertrain,FleetGear Ltd.,2800,3,Canada,11,Limited Stock
+TRN008,Automated Manual Transmission Unit Model-3,Transmission,Powertrain,RoadMaster Components,2000,6,South Korea,28,Out of Stock
+STG007,Steering System Model-7,Steering,Control,RoadMaster Components,2300,10,Canada,35,In Stock
+TRN009,Multi-Speed Gear Train Model-2,Transmission,Powertrain,RoadMaster Components,3700,11,USA,28,In Stock
+RAD012,Radiator Model-12,Cooling,Cooling,TruckTech Inc.,4400,11,USA,14,In Stock
+BRK008,Trailer Brake Controller Model-1,Steering,Safety,AutoParts Co.,2600,1,South Korea,17,Limited Stock
+RAD013,Radiator Model-13,Cooling,Cooling,RoadMaster Components,400,5,Mexico,24,Out of Stock
+SUS013,Hydraulic Suspension Module Model-3,Suspension,Chassis,RoadMaster Components,4600,6,Canada,32,In Stock
+STG008,Steering System Model-8,Steering,Control,TruckTech Inc.,3800,11,Mexico,18,In Stock
+BRK009,Air Disc Brake System Model-2,Brakes,Safety,AutoParts Co.,2600,8,South Korea,32,Limited Stock

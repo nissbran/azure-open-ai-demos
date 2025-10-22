@@ -1,0 +1,24 @@
+{
+	"servers": {
+		"local-tools-remote": {
+			"type": "http",
+			"url": "http://localhost:5195"
+		},
+		"ci-template-server": {
+			"url": "http://localhost:5196",
+			"type": "http"
+		},
+        "github-remote": {
+            "type": "http",
+            "url": "https://api.githubcopilot.com/mcp/",
+        },
+	},
+	"inputs": [
+		{
+			"id": "github_token",
+			"type": "promptString",
+			"description": "GitHub Personal Access Token",
+			"password": true
+		}
+	]
+}

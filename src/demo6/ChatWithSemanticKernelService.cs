@@ -9,6 +9,7 @@ using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Connectors.OpenAI;
 using ModelContextProtocol.Client;
+using ModelContextProtocol.Protocol;
 using Serilog;
 #pragma warning disable SKEXP0001
 
@@ -65,14 +66,10 @@ public class ChatWithSemanticKernelService
         }
         
         Log.Verbose("Creating new MCP client");
-        _mcpClient = await McpClientFactory.CreateAsync(
-            new SseClientTransport(new SseClientTransportOptions
-            {
-                Endpoint = _mcpServerUri,
-                TransportMode = HttpTransportMode.AutoDetect,
-                Name = "Star Wars Info",
-                
-            })).ConfigureAwait(false);
+        _mcpClient = await McpClient.CreateAsync(new HttpClientTransport(new HttpClientTransportOptions
+        {
+            Endpoint = _mcpServerUri
+        }));
         var tools = await _mcpClient.ListToolsAsync().ConfigureAwait(false);
         
         Log.Verbose("Found {Count} tools", tools.Count);

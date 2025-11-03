@@ -40,6 +40,7 @@ dotnet run
 * **[Demo4](src/demo4)**: Semantic Kernel with RAG - Plugin-based architecture using Semantic Kernel with Azure AI Search integration
 * **[Demo5](src/demo5)**: Semantic Kernel with Agents - Multi-agent conversation system with OpenTelemetry observability
 * **[Demo6](src/demo6)**: Semantic Kernel + Custom MCP - Integration with Model Context Protocol using a custom MCP server
+* **[Demo9](src/demo9)**: Multi-Agent Orchestration - Advanced multi-agent group chat with specialized agents for vehicle manufacturing, including BoM, supplier, production tracking, and warehouse inventory management
 
 ### MCP (Model Context Protocol) Integration
 * **[Demo7](src/demo7)**: GitHub MCP Server - Function calling using the official GitHub MCP server for repository interactions

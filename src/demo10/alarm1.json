@@ -1,0 +1,81 @@
+﻿{
+  "alertId": "ENG-ALERT-20251030-091245",
+  "deviceId": "ENG-MONITOR-V8-002",
+  "deviceName": "V8 Twin-Turbo Diesel Model-2 Engine Monitor",
+  "deviceType": "Engine Condition Monitor",
+  "location": {
+    "building": "Power Generation Facility B",
+    "floor": "1",
+    "room": "Generator Bay 2",
+    "coordinates": {
+      "latitude": 40.7589,
+      "longitude": -73.9851
+    }
+  },
+  "alert": {
+    "type": "COMPONENT_DEGRADATION",
+    "severity": "HIGH",
+    "message": "Engine components showing signs of degradation - immediate maintenance required",
+    "component": {
+      "partType": "Engine",
+      "partName": "V8 Twin-Turbo Diesel Model-2"
+    },
+    "degradationIndicators": [
+      {
+        "parameter": "vibration",
+        "currentValue": 8.7,
+        "normalRange": "0.0-5.0",
+        "unit": "mm/s",
+        "status": "CRITICAL"
+      },
+      {
+        "parameter": "oilPressure",
+        "currentValue": 28.5,
+        "normalRange": "35.0-45.0",
+        "unit": "psi",
+        "status": "LOW"
+      },
+      {
+        "parameter": "engineTemperature",
+        "currentValue": 94.2,
+        "normalRange": "80.0-90.0",
+        "unit": "celsius",
+        "status": "HIGH"
+      },
+      {
+        "parameter": "exhaustGasTemperature",
+        "currentValue": 485.3,
+        "normalRange": "350.0-450.0",
+        "unit": "celsius",
+        "status": "HIGH"
+      }
+    ],
+    "predictedFailureTime": "2025-11-15T00:00:00.000Z",
+    "confidenceLevel": 87.5,
+    "duration": "02:15:30",
+    "alertStartTime": "2025-10-30T06:57:15.123Z"
+  },
+  "deviceStatus": {
+    "batteryLevel": 92,
+    "signalStrength": -38,
+    "lastMaintenance": "2025-10-20T14:30:00.000Z",
+    "firmwareVersion": "4.2.1",
+    "sensorCount": 12,
+    "activeSensors": 11
+  },
+  "maintenanceHistory": {
+    "lastInspection": "2025-09-15T10:00:00.000Z",
+    "hoursOfOperation": 12847,
+    "lastOilChange": "2025-10-01T08:00:00.000Z",
+    "lastMajorOverhaul": "2024-03-15T00:00:00.000Z"
+  },
+  "metadata": {
+    "generatedBy": "Predictive Maintenance AI v2.8.3",
+    "processingTime": "2025-10-30T09:12:46.789Z",
+    "correlationId": "CORR-456789321",
+    "dataSource": "Industrial IoT Gateway",
+    "alertRuleId": "ENG-DEGRAD-RULE-002",
+    "mlModelVersion": "PM-Engine-v1.4.2",
+    "analysisType": "Predictive Analytics"
+  }
+}

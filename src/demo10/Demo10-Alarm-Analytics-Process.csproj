@@ -3,7 +3,7 @@
     <PropertyGroup>
          <TargetFramework>net9.0</TargetFramework>
         <OutputType>Exe</OutputType>
-        <RootNamespace>Demo9</RootNamespace>
+        <RootNamespace>Demo10</RootNamespace>
 		<UserSecretsId>ca64dc64-4faf-43c1-87c2-3854d28b0ccd</UserSecretsId>
     </PropertyGroup>
 
@@ -16,16 +16,12 @@
     </ItemGroup>
     
     <ItemGroup>
-<!--        <PackageReference Include="Microsoft.Agents.AI" Version="1.0.0-preview.251002.1"/>-->
-<!--        <PackageReference Include="Microsoft.Agents.AI.OpenAI" Version="1.0.0-preview.251002.1"/>-->
-<!--        <PackageReference Include="Microsoft.Agents.AI.Workflows" Version="1.0.0-preview.251002.1"/>-->
-        <PackageReference Include="Microsoft.SemanticKernel" Version="1.66.0" />  
-        <PackageReference Include="Microsoft.SemanticKernel.Connectors.AzureOpenAI" Version="1.66.0" />
-        <PackageReference Include="Microsoft.SemanticKernel.Agents.Core" Version="1.66.0" />
-        <PackageReference Include="Microsoft.SemanticKernel.Agents.Orchestration" Version="1.66.0-preview" />
-        <PackageReference Include="Microsoft.SemanticKernel.Agents.Magentic" Version="1.66.0-preview" />
-        <PackageReference Include="Microsoft.SemanticKernel.Agents.Runtime.InProcess" Version="1.66.0-preview" />
+        <PackageReference Include="Azure.AI.OpenAI" Version="2.5.0-beta.1" />
+        <PackageReference Include="Microsoft.Agents.AI" Version="1.0.0-preview.251104.1" />
+        <PackageReference Include="Microsoft.Agents.AI.OpenAI" Version="1.0.0-preview.251104.1" />  
+        <PackageReference Include="Microsoft.Agents.AI.Workflows" Version="1.0.0-preview.251104.1" />
         <PackageReference Include="Azure.Search.Documents" Version="11.7.0" />
+        <PackageReference Include="ModelContextProtocol" Version="0.4.0-preview.2" />
     </ItemGroup>
 
     <ItemGroup>
@@ -34,17 +30,17 @@
         <PackageReference Include="Serilog.Sinks.OpenTelemetry" Version="4.2.0" />
         <PackageReference Include="Spectre.Console" Version="0.52.0" />
         <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.13.1" />
-        <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.12.0" />
+        <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.13.0" />
         <PackageReference Include="Azure.Monitor.OpenTelemetry.Exporter" Version="1.4.0" />
     </ItemGroup>
 
     <ItemGroup>
         <None Include="appsettings.local.json" CopyToOutputDirectory="PreserveNewest" Condition="Exists('appsettings.local.json')" />
         <None Include="appsettings.json" CopyToOutputDirectory="PreserveNewest" Condition="Exists('appsettings.json')" />
+        <None Include="alarm1.json" CopyToOutputDirectory="PreserveNewest" Condition="Exists('alarm1.json')" />
     </ItemGroup>
     
     <ItemGroup>
-        <None Include="Agents\**\*.prompty" CopyToOutputDirectory="PreserveNewest" />
         <None Include="Agents\**\*.csv" CopyToOutputDirectory="PreserveNewest" />
     </ItemGroup>
     

@@ -1,0 +1,84 @@
+<!--
+    Azure API Management Policy for AAD Token Validation with On-Behalf-Of Flow to Microsoft Graph
+    This policy validates Azure Active Directory (AAD) access tokens from incoming requests,
+    then exchanges them for Microsoft Graph tokens using the On-Behalf-Of (OBO) flow.
+    If validation fails, it returns HTTP 401 with proper WWW-Authenticate header.
+-->
+<policies>
+    <inbound>
+        <base />
+        <validate-azure-ad-token tenant-id="{{McpTenantId}}" failed-validation-httpcode="401" failed-validation-error-message="Unauthorized" output-token-variable-name="ValidatedToken">
+			<audiences>
+				<audience>{{McpOBOClientId}}</audience>
+			</audiences>
+		</validate-azure-ad-token>
+		<!-- Store configuration values -->
+		<set-variable name="McpClientId" value="{{McpOBOClientId}}" />
+		<set-variable name="McpClientSecret" value="{{McpOBOClientSecret}}" />
+		<!-- Check APIM cache for existing Graph token for this user -->
+		<cache-lookup-value key="@("GraphToken-" + ((Jwt)context.Variables["ValidatedToken"]).Subject)" variable-name="GraphBearerToken" />
+		<choose>
+			<!-- If Graph token is not in cache, get it using On-Behalf-Of flow -->
+			<when condition="@(!context.Variables.ContainsKey("GraphBearerToken"))">
+				<!-- Exchange the incoming token for a Microsoft Graph token using OBO flow -->
+				<send-request mode="new" response-variable-name="fetchGraphToken" timeout="20" ignore-error="false">
+					<set-url>https://login.microsoftonline.com/{{McpTenantId}}/oauth2/v2.0/token</set-url>
+					<set-method>POST</set-method>
+					<set-header name="Content-Type" exists-action="override">
+						<value>application/x-www-form-urlencoded</value>
+					</set-header>
+					<set-body>@{
+                        var clientId = "{{McpOBOClientId}}";
+                        var clientSecret = "{{McpOBOClientSecret}}";
+                        var scope = "https://graph.microsoft.com/.default";
+                        var userAssertion = context.Variables["ValidatedToken"];
+                        return $"grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer&client_id={clientId}&client_secret={Uri.EscapeDataString(clientSecret)}&assertion={userAssertion}&scope={Uri.EscapeDataString(scope)}&requested_token_use=on_behalf_of";
+                    }</set-body>
+				</send-request>
+				<!-- Parse the token response -->
+				<set-variable name="GraphTokenResponse" value="@(((IResponse)context.Variables["fetchGraphToken"]).Body.As<JObject>())" />
+				<!-- Check if we got a valid token response -->
+				<choose>
+					<when condition="@(((JObject)context.Variables["GraphTokenResponse"]).Property("access_token") != null)">
+						<set-variable name="GraphBearerToken" value="@(((JObject)context.Variables["GraphTokenResponse"])["access_token"].ToString())" />
+						<set-variable name="GraphTokenExpiry" value="@(((JObject)context.Variables["GraphTokenResponse"])["expires_in"].ToString())" />
+						<set-variable name="iGraphTokenExpiryThirds" value="@(int.Parse((string)context.Variables["GraphTokenExpiry"]) / 3)" />
+						<!-- Add random back-off delay to avoid token expiry bursts -->
+						<set-variable name="RandomBackOffDelay" value="@(new Random().Next((int)context.Variables["iGraphTokenExpiryThirds"], (int)context.Variables["iGraphTokenExpiryThirds"] * 2))" />
+						<!-- Cache the Graph token until expiry (minus back-off delay) -->
+						<cache-store-value key="@("GraphToken-" + context.Request.Headers.GetValueOrDefault("Authorization","").AsJwt()?.Subject)" value="@((string)context.Variables["GraphBearerToken"])" duration="@((int)context.Variables["iGraphTokenExpiry"] - (int)context.Variables["RandomBackOffDelay"])" />
+					</when>
+					<otherwise>
+						<!-- Token exchange failed - return error -->
+						<return-response>
+							<set-status code="401" reason="Unauthorized" />
+							<set-header name="WWW-Authenticate" exists-action="override">
+								<value>Bearer error="invalid_token", error_description="Failed to exchange token for Microsoft Graph access"</value>
+							</set-header>
+							<set-header name="Content-Type" exists-action="override">
+								<value>application/json</value>
+							</set-header>
+							<set-body>@{
+                                var errorResponse = (JObject)context.Variables["GraphTokenResponse"];
+                                return errorResponse.ToString();
+                            }</set-body>
+						</return-response>
+					</otherwise>
+				</choose>
+			</when>
+        </choose>
+        <!-- Set the Graph token in the Authorization header for downstream calls -->
+        <set-header name="Authorization" exists-action="override">
+            <value>@("Bearer " + (string)context.Variables["GraphBearerToken"])</value>
+        </set-header>
+    </inbound>
+    <backend>
+        <base />
+    </backend>
+    <outbound>
+        <base />
+    </outbound>
+    <on-error>
+        <base />
+    </on-error>
+</policies>

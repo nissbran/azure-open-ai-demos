@@ -1,0 +1,47 @@
+<!--
+    Azure API Management Policy for AAD Token Validation with On-Behalf-Of Flow to Microsoft Graph
+    This policy validates Azure Active Directory (AAD) access tokens from incoming requests,
+    then exchanges them for Microsoft Graph tokens using the On-Behalf-Of (OBO) flow.
+    If validation fails, it returns HTTP 401 with proper WWW-Authenticate header.
+-->
+<policies>
+    <inbound>
+        <base />
+        <cors allow-credentials="true">
+            <allowed-origins>
+                <origin>http://localhost:6274</origin>
+            </allowed-origins>
+            <allowed-methods preflight-result-max-age="300">
+                <method>*</method>
+            </allowed-methods>
+            <allowed-headers>
+                <header>*</header>
+            </allowed-headers>
+        </cors>
+        <!-- Validate Azure AD JWT Token -->
+        <validate-azure-ad-token tenant-id="{{McpTenantId}}" failed-validation-httpcode="401" failed-validation-error-message="Unauthorized" output-token-variable-name="ValidatedToken">
+            <audiences>
+                <audience>{{McpOBOClientId}}</audience>
+            </audiences>
+        </validate-azure-ad-token>
+    </inbound>
+    <backend>
+        <base />
+    </backend>
+    <outbound>
+        <base />
+    </outbound>
+    <on-error>
+        <base />
+        <choose>
+            <when condition="@(context.Response.StatusCode == 401)">
+                <return-response>
+                    <set-status code="401" reason="Unauthorized" />
+                    <set-header name="WWW-Authenticate" exists-action="override">
+                        <value>Bearer resource_metadata="{{APIMGatewayURL}}/.well-known/oauth-protected-resource/graph/mcp", scope="{{APIMGatewayURL}}/graph/mcp/.default"</value>
+                    </set-header>
+                </return-response>
+            </when>
+        </choose>
+    </on-error>
+</policies>

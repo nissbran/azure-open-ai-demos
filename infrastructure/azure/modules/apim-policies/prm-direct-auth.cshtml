@@ -1,0 +1,41 @@
+<!--
+    - Policies are applied in the order they appear.
+    - Position <base/> inside a section to inherit policies from the outer scope.
+    - Comments within policies are not preserved.
+-->
+<policies>
+    <inbound>
+        <return-response>
+            <set-status code="200" reason="OK" />
+            <set-header name="Content-Type" exists-action="override">
+                <value>application/json</value>
+            </set-header>
+            <set-header name="Cache-Control" exists-action="override">
+                <value>public, max-age=3600</value>
+            </set-header>
+            <set-body>@{
+                return JsonConvert.SerializeObject(new {
+                    resource = "{{APIMGatewayURL}}/microsoft-learn/api/mcp",
+                    authorization_servers = new[] {
+                        $"https://login.microsoftonline.com/{{McpTenantId}}/v2.0"
+                    },
+                    bearer_methods_supported = new[] {
+                        "header"
+                    },
+                    scopes_supported = new[] {
+                        "{{McpClientId}}/Test.Role.Consent"
+                    }
+                });
+            }</set-body>
+        </return-response>
+    </inbound>
+    <backend>
+        <base />
+    </backend>
+    <outbound>
+        <base />
+    </outbound>
+    <on-error>
+        <base />
+    </on-error>
+</policies>

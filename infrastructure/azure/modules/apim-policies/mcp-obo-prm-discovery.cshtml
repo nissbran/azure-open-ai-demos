@@ -1,0 +1,54 @@
+<!--
+    Azure API Management Policy for AAD Token Validation with On-Behalf-Of Flow to Microsoft Graph
+    This policy validates Azure Active Directory (AAD) access tokens from incoming requests,
+    then exchanges them for Microsoft Graph tokens using the On-Behalf-Of (OBO) flow.
+    If validation fails, it returns HTTP 401 with proper WWW-Authenticate header.
+-->
+<policies>
+    <inbound>
+        <base />
+        <cors allow-credentials="true">
+            <allowed-origins>
+                <origin>http://localhost:6274</origin>
+            </allowed-origins>
+            <allowed-methods preflight-result-max-age="300">
+                <method>*</method>
+            </allowed-methods>
+            <allowed-headers>
+                <header>*</header>
+            </allowed-headers>
+        </cors>
+        <return-response>
+            <set-status code="200" reason="OK" />
+            <set-header name="Content-Type" exists-action="override">
+                <value>application/json</value>
+            </set-header>
+            <set-header name="Cache-Control" exists-action="override">
+                <value>public, max-age=3600</value>
+            </set-header>
+            <set-body>@{
+                return JsonConvert.SerializeObject(new {
+                    resource = "{{APIMGatewayURL}}/graph/mcp",
+                    authorization_servers = new[] {
+                        $"https://login.microsoftonline.com/{{McpTenantId}}/v2.0"
+                    },
+                    bearer_methods_supported = new[] {
+                        "header"
+                    },
+                    scopes_supported = new[] {
+                        "{{APIMGatewayURL}}/graph/mcp/.default"
+                    }
+                });
+            }</set-body>
+        </return-response>
+    </inbound>
+    <backend>
+        <base />
+    </backend>
+    <outbound>
+        <base />
+    </outbound>
+    <on-error>
+        <base />
+    </on-error>
+</policies>

@@ -2,11 +2,16 @@ param apimServiceName string
 param location string = resourceGroup().location
 param publisherEmail string
 param publisherName string
-@secure()
-param mcpOBOClientSecret string
 param mcpOBOClientId string
 param userAssignedIdentityId string
 param userAssignedIdentityClientId string
+
+@description('The pricing tier of this API Management service')
+@allowed([
+  'BasicV2'
+  'StandardV2'
+])
+param apimSku string = 'BasicV2'
 
 var apimGatewayUrl = 'https://${apimServiceName}.azure-api.net'
 
@@ -14,7 +19,7 @@ resource apim_service 'Microsoft.ApiManagement/service@2024-10-01-preview' = {
   name: apimServiceName
   location: location
   sku: {
-    name: 'BasicV2'
+    name: apimSku
     capacity: 1
   }
   properties: {
@@ -52,15 +57,15 @@ resource named_value_McpOBOClientId 'Microsoft.ApiManagement/service/namedValues
   }
 }
 
-resource named_value_McpOBOClientSecret 'Microsoft.ApiManagement/service/namedValues@2024-10-01-preview' = {
-  parent: apim_service
-  name: 'McpOBOClientSecret'
-  properties: {
-    displayName: 'McpOBOClientSecret'
-    value: mcpOBOClientSecret
-    secret: true
-  }
-}
+// resource named_value_McpOBOClientSecret 'Microsoft.ApiManagement/service/namedValues@2024-10-01-preview' = {
+//   parent: apim_service
+//   name: 'McpOBOClientSecret'
+//   properties: {
+//     displayName: 'McpOBOClientSecret'
+//     value: mcpOBOClientSecret
+//     secret: true
+//   }
+// }
 
 resource named_Value_APIMUserAssignedManagedIdentityId 'Microsoft.ApiManagement/service/namedValues@2024-10-01-preview' = {
   parent: apim_service

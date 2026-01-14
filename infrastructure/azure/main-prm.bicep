@@ -31,17 +31,6 @@ module entraApps 'modules/mcp-entra-apps.bicep' = {
   }
 }
 
-// module entraAppsConsent 'modules/mcp-entra-apps-consent.bicep' = {
-//   name: 'mcp-entra-apps-consent-deployment'
-//   scope: group
-//   params: {
-//     mcpAppUri: 'https://${apimName}.azure-api.net/graph/mcp'
-//     userAssignedIdentityPrincipalId: uai.outputs.identityPrincipalId
-//     mcpGraphServerAppUniqueName: 'mcp-graph-server-app-consent'
-//     mcpInspectorClientAppUniqueName: 'mcp-inspector-client-app-consent'
-//   }
-// }
-
 module apim 'modules/apim-prm-api.bicep' = {
   name: 'apim-deployment'
   scope: group
@@ -53,6 +42,5 @@ module apim 'modules/apim-prm-api.bicep' = {
     userAssignedIdentityId: uai.outputs.identityId
     userAssignedIdentityClientId: uai.outputs.identityClientId
     mcpOBOClientId: entraApps.outputs.mcpAppId
-    mcpOBOClientSecret: 'REPLACE-WITH-KEYVAULT-REFERENCE'
   }
 }

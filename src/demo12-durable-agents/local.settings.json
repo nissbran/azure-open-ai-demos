@@ -5,6 +5,7 @@
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
     "DURABLE_TASK_SCHEDULER_CONNECTION_STRING": "Endpoint=http://localhost:8080;TaskHub=default;Authentication=None",
     "OTEL_EXPORTER_OTLP_ENDPOINT": "http://localhost:4317",
-    "OTEL_SERVICE_NAME": "Demo12-Alarm-Analytics-Durable-Agents"
+    "OTEL_SERVICE_NAME": "Demo12-Alarm-Analytics-Durable-Agents",
+    "APPLICATIONINSIGHTS_CONNECTION_STRING": "InstrumentationKey=00000000-0000-0000-0000-000000000000;IngestionEndpoint=http://localhost:4317;LiveEndpoint=http://localhost:4317"
   }
 }

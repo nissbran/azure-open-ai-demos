@@ -1,17 +1,17 @@
-# Demo10
+# Demo12 - Durable Agents
 
-Azure OpenAI and RAG integration using Semantic Kernel using agent group chat..
+Azure Durable Functions with Semantic Kernel agents for long-running workflows and alarm analytics.
 
 ## Prerequisites
 
 - [.NET 10.0 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/10.0)
 - [Functions Core Tools](https://github.com/Azure/azure-functions-core-tools)
 - [Docker](https://www.docker.com/get-started/)
-- An foundry resource. Follow the instructions [here](../../infrastructure/azure/ReadMe.md) to set up the infrastructure.
+- An Azure AI Foundry resource. Follow the instructions [here](../../infrastructure/azure/ReadMe.md) to set up the infrastructure.
 
 ## To run
 
-Use the instructions in the [main readme](../README.md) to deploy the infrastructure and set up environment variables or user secrets. It is also possible to use a local json file for configuration.
+Use the instructions in the [main README](../../README.md) to deploy the infrastructure and set up environment variables or user secrets. It is also possible to use a local json file for configuration.
 
 If you prefer, update the `local.settings.json` file with your configuration values:
 ```json

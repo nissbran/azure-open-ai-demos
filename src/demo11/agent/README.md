@@ -6,7 +6,14 @@ This project demonstrates a basic chat application using the agent framework, si
 - Basic chat interface
 - Utilizes the agent framework for extensibility
 
+## Prerequisites
+
+- [.NET 10.0 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/10.0)
+- Azure OpenAI access and configuration. See the [main README](../../README.md) for setup instructions.
+
 ## How to Run
+
+Use the instructions in the [main README](../../README.md) to configure your Azure OpenAI credentials.
 
 1. Build the project:
    ```sh
@@ -25,4 +32,4 @@ This project demonstrates a basic chat application using the agent framework, si
 
 ---
 
-For more advanced agent orchestration and analytics, see Demo 10.
+For more advanced agent orchestration and analytics, see [Demo 10](../demo10).

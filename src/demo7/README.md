@@ -1,6 +1,6 @@
-# Demo7
+# Demo7 - GitHub MCP Server
 
-Azure OpenAI and function calling using the official github MCP server.
+Function calling using the official GitHub MCP server for repository interactions.
 
 ## To run
 

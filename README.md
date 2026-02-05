@@ -5,7 +5,8 @@ Demo repo for showcasing how to use Azure OpenAI services with various framework
 ## Prerequisites
 
 - An Azure subscription with access to Azure AI Foundry and Azure AI Search.
-- .NET 9 SDK installed.
+- .NET 9 SDK installed (most demos).
+- .NET 10 SDK for Demo11 and Demo12.
 - An IDE such as Visual Studio or Visual Studio Code.
 - Azure CLI installed. [Install Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli)
 
@@ -41,6 +42,11 @@ dotnet run
 * **[Demo5](src/demo5)**: Semantic Kernel with Agents - Multi-agent conversation system with OpenTelemetry observability
 * **[Demo6](src/demo6)**: Semantic Kernel + Custom MCP - Integration with Model Context Protocol using a custom MCP server
 * **[Demo9](src/demo9)**: Multi-Agent Orchestration - Advanced multi-agent group chat with specialized agents for vehicle manufacturing, including BoM, supplier, production tracking, and warehouse inventory management
+* **[Demo10](src/demo10)**: Agent Analytics - Azure OpenAI with Semantic Kernel agents featuring analytics and observability integration with Aspire Dashboard
+
+### Agent Framework & Advanced Patterns
+* **[Demo11](src/demo11/agent)**: Agent Framework Basic Chat - Basic chat application using the agent framework for extensibility
+* **[Demo12](src/demo12-durable-agents)**: Durable Agents - Azure Durable Functions with Semantic Kernel agents for long-running workflows and alarm analytics
 
 ### MCP (Model Context Protocol) Integration
 * **[Demo7](src/demo7)**: GitHub MCP Server - Function calling using the official GitHub MCP server for repository interactions

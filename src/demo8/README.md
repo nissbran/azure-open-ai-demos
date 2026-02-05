@@ -1,6 +1,6 @@
-# Demo8
+# Demo8 - Azure Foundry Agent Service
 
-Azure Foundry Agent Service with MCP server integration.
+Advanced agent service with MCP server integration on Azure Foundry.
 
 ## To run
 
@@ -8,18 +8,20 @@ First deploy a Azure Foundry Instance and create a project.
 
 Create a file called 'appsettings.local.json' in the root of the project with the content: 
 ```json
-"Serilog": {
+{
+  "Serilog": {
     "MinimumLevel": "Information"
-},
-"AzureOpenAI": {
+  },
+  "AzureOpenAI": {
     "Endpoint": "https://   <your endpoint>  .openai.azure.com/",
     "ApiKey": "  <your key>  ",
     "ChatModel": " <your chat model, ex gpt-4-with-assistants >   "
-},
-"AgentService": {
+  },
+  "AgentService": {
     "AgentId": " <your agent id> ",
     "Endpoint": "https:// <your instance> .services.ai.azure.com/api/projects/ <your project> /",
     "McpBaseUrl": "https:// <your site> .azurewebsites.net/sse"
+  }
 }
 ```
 

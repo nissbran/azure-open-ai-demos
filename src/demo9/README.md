@@ -29,7 +29,7 @@ Azure OpenAI and RAG integration using Semantic Kernel with multi-agent group ch
 
 ## To run
 
-Use the instructions in the [main readme](../README.md) to deploy the infrastructure and set up environment variables or user secrets. It is also possible to use a local json file for configuration.
+Use the instructions in the [main README](../../README.md) to deploy the infrastructure and set up environment variables or user secrets. It is also possible to use a local json file for configuration.
 
 
 If you prefer, create a file called `appsettings.local.json` in the root of the project with the content:

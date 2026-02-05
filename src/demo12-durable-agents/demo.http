@@ -1,0 +1,16 @@
+###
+# @name orchestrationResponse
+POST http://localhost:7071/api/alarm-analytics/run
+Content-Type: text/plain
+    
+
+###
+@instanceId = {{orchestrationResponse.response.body.$.instanceId}}
+###
+GET http://localhost:7071/api/alarm-analytics/{{instanceId}}/status
+
+###
+POST http://localhost:7071/api/alarm-analytics/{{instanceId}}/approve
+
+###
+POST http://localhost:7071/api/alarm-analytics/{{instanceId}}/reject

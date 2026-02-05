@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Configuration;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
@@ -34,7 +35,7 @@ public class ChatWithSemanticKernelService
     private const int ReducerTarget = 2;
     private const int HistoryLimit = 4;
 
-    private IMcpClient _mcpClient;
+    private McpClient _mcpClient;
 
     public ChatWithSemanticKernelService(IConfiguration configuration)
     {
@@ -67,16 +68,15 @@ public class ChatWithSemanticKernelService
         }
 
         Log.Verbose("Creating new MCP client");
-        var dockerPat = $"GITHUB_PERSONAL_ACCESS_TOKEN={_githubPat}".ToString();
-        _mcpClient = await McpClientFactory.CreateAsync(
-            new StdioClientTransport(new StdioClientTransportOptions
+        _mcpClient = await McpClient.CreateAsync(new HttpClientTransport(new()
+        {
+            Name = "GitHub MCP",
+            Endpoint = new Uri("https://api.githubcopilot.com/mcp/"),
+            AdditionalHeaders = new AdditionalPropertiesDictionary<string>
             {
-                Command = "docker",
-                Arguments = new List<string>()
-                {
-                    "run", "-i", "--rm", "-e", dockerPat, "ghcr.io/github/github-mcp-server:v0.2.1"
-                },
-            })).ConfigureAwait(false);
+                { "Authorization", "Bearer " + _githubPat }
+            }
+        }));
         var tools = await _mcpClient.ListToolsAsync().ConfigureAwait(false);
 
         Log.Verbose("Found {Count} tools", tools.Count);

@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "Demo11-AgentFramework-BasicChat": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:58397;http://localhost:58398"
+    }
+  }
+}

@@ -1,9 +1,10 @@
 <Solution>
   <Folder Name="/aspire/">
-    <Project Path="src\aspire\AspireHost.AppHost.csproj" Type="Classic C#" />
+    <Project Path="src\aspire\AspireHost.AppHost.csproj" />
   </Folder>
   <Folder Name="/demos/">
     <Project Path="src/demo1/Demo1-AzureOpenAI-SDK.csproj" />
+    <Project Path="src/demo11/agent/Demo11-AgentFramework-BasicChat.csproj" />
     <Project Path="src/demo2/Demo2-FunctionCalling-RAG.csproj" />
     <Project Path="src/demo3/Demo3-MEAI-FunctionCalling-RAG.csproj" />
     <Project Path="src/demo4/Demo4-SemanticKernel-RAG.csproj" />
@@ -11,8 +12,9 @@
     <Project Path="src/demo6/Demo6-Mcp.csproj" />
     <Project Path="src/demo7/Demo7-Mcp-Github.csproj" />
     <Project Path="src/demo8/Demo8-AgentService.csproj" />
-    <Project Path="src\demo10\Demo10-Alarm-Analytics-Process.csproj" Type="Classic C#" />
-    <Project Path="src\demo9\Demo9-SemanticKernel-Multi-Agents.csproj" />
+    <Project Path="src/demo10/Demo10-Alarm-Analytics-Process.csproj" />
+    <Project Path="src/demo9/Demo9-SemanticKernel-Multi-Agents.csproj" />
+    <Project Path="src/demo12-durable-agents/Demo12-Alarm-Analytics-Durable-Agents.csproj" />
   </Folder>
   <Folder Name="/indexers/">
     <Project Path="src/indexer/SwapiIndexer.csproj" />
@@ -31,5 +33,6 @@
     <File Path="LICENSE" />
     <File Path="demo.json" />
     <File Path="httptest.http" />
+    <File Path=".env"/>
   </Folder>
 </Solution>

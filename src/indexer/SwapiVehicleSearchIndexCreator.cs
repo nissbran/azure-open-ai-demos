@@ -78,7 +78,6 @@ public class SwapiVehicleSearchIndexCreator
                 },
                 Profiles =
                 {
-                    
                     new VectorSearchProfile(VectorConfigName, AlgorithmConfigName)
                     {
                         VectorizerName = VectorizerName
@@ -87,6 +86,7 @@ public class SwapiVehicleSearchIndexCreator
             },
             SemanticSearch = new SemanticSearch
             {
+                DefaultConfigurationName = "default",
                 Configurations =
                 {
                     new SemanticConfiguration("default", new SemanticPrioritizedFields()

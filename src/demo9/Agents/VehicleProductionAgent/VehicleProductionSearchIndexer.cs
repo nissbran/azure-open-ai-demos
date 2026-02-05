@@ -92,6 +92,7 @@ public class VehicleProductionSearchIndexer
             },
             SemanticSearch = new SemanticSearch
             {
+                DefaultConfigurationName = "default",
                 Configurations =
                 {
                     new SemanticConfiguration("default", new SemanticPrioritizedFields

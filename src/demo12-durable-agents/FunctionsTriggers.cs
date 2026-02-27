@@ -27,15 +27,15 @@ public static class FunctionsTriggers
 
         // Get both agents
         var analyticsAgent = context.GetAgent("AlarmAnalyticsAgent");
-        var analyticsSession = await analyticsAgent.GetNewSessionAsync();
+        var analyticsSession = await analyticsAgent.CreateSessionAsync();
 
-        logger.Log(LogLevel.Information, "Starting agent thread for prompt: {Prompt}", prompt);
+        logger.LogInformation("Starting agent thread for prompt: {Prompt}", prompt);
         var analyticsResponse = await analyticsAgent.RunAsync(prompt, analyticsSession);
 
         var supplierAgent = context.GetAgent("SupplierAgent");
-        var supplierSession = await supplierAgent.GetNewSessionAsync();
+        var supplierSession = await supplierAgent.CreateSessionAsync();
 
-        logger.Log(LogLevel.Information, "Starting supplier agent thread for analytics response: {AnalyticsResponse}", analyticsResponse.Text);
+        logger.LogInformation("Starting supplier agent thread for analytics response: {AnalyticsResponse}", analyticsResponse.Text);
         var supplierResponse = await supplierAgent.RunAsync(analyticsResponse.Messages.LastOrDefault()?.Text, supplierSession);
 
         // Fix after issues with serialization of the agent response object
@@ -79,6 +79,12 @@ public static class FunctionsTriggers
             
             casePublishResponse = await context.CallActivityAsync<string>(nameof(CasePublishAgentActivity), latestSupplierResponse.Messages.LastOrDefault().Text);
 
+            var stringTest = latestSupplierResponse.ToString();
+            var stringTest2 = latestSupplierResponse.Text;
+            
+            Console.WriteLine("Case publish response 1: " + stringTest);
+            Console.WriteLine("Case publish response 2: " + stringTest2);
+            
             context.SetCustomStatus($"Case published successfully at {context.CurrentUtcDateTime:s}: {casePublishResponse}");
 
             logger.Log(LogLevel.Information, "Human approved case publication");
@@ -119,7 +125,7 @@ public static class FunctionsTriggers
     {
         var agent = Agents.CreateCasePublisherAgent(executionContext.InstanceServices);
 
-        var session = await agent.GetNewSessionAsync();
+        var session = await agent.CreateSessionAsync();
         var response = await agent.RunAsync(prompt, session);
         return response.Text;
     }
@@ -151,6 +157,12 @@ public static class FunctionsTriggers
         // Simulate sending notification to user
         logger.LogInformation("Notifying user for approval of content: {Content}", content);
         await Task.CompletedTask;
+    }
+
+    [Function(nameof(ArchiveCase))]
+    public static async Task ArchiveCase([ActivityTrigger] string content, FunctionContext executionContext)
+    {
+        
     }
 
     // POST /alarm-analytics/{instanceId}/approve

@@ -49,7 +49,7 @@ using var tracerProviderBuilder = Sdk.CreateTracerProviderBuilder()
     .AddSource("AlarmAnalyticsAgent", "SupplierAgent", "SummaryAgent", "CasePublishAgent") // Our agents
     .AddHttpClientInstrumentation() // Capture HTTP calls to OpenAI
     .AddOtlpExporter()
-    .AddAzureMonitorTraceExporter(options => options.ConnectionString = configuration["ApplicationInsights:ConnectionString"])
+    //.AddAzureMonitorTraceExporter(options => options.ConnectionString = configuration["ApplicationInsights:ConnectionString"])
     .Build();
 
 using var meterProvider = Sdk.CreateMeterProviderBuilder()

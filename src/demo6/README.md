@@ -1,4 +1,4 @@
-# Demo4
+# Demo6
 
 Azure OpenAI and function calling using an external MCP server.
 

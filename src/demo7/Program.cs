@@ -20,7 +20,9 @@ Log.Logger = new LoggerConfiguration()
     .CreateLogger();
 
 // Create chat service
-var chatService = new ChatWithSemanticKernelService(configuration);
+#pragma warning disable MEAI001
+var chatService = new ChatWithAgentFrameworkService(configuration);
+#pragma warning restore MEAI001
 string botName = "GitHub Assistant";
 
 // Run chat

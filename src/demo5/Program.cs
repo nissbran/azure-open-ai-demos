@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.Threading;
+using Azure.Monitor.OpenTelemetry.Exporter;
 using Demo5;
 using Microsoft.Extensions.Configuration;
 using OpenTelemetry;
@@ -39,7 +40,7 @@ using var traceProvider = Sdk.CreateTracerProviderBuilder()
     .AddHttpClientInstrumentation()
     .AddSource("Microsoft.SemanticKernel*", "Demo5")
     .AddOtlpExporter()
-    //.AddAzureMonitorTraceExporter(options => options.ConnectionString = configuration["ApplicationInsights:ConnectionString"])
+    .AddAzureMonitorTraceExporter(options => options.ConnectionString = configuration["ApplicationInsights:ConnectionString"])
     .Build();
 
 var activitySource = new ActivitySource("Demo5");

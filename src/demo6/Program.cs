@@ -24,7 +24,7 @@ Log.Logger = new LoggerConfiguration()
     .CreateLogger();
 
 // Create chat service
-var chatService = new ChatWithSemanticKernelService(configuration);
+var chatService = new ChatWithAgentFrameworkService(configuration);
 string botName = "Star Wars Assistant";
 
 // Run chat

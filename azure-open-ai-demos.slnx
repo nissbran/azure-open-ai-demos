@@ -1,10 +1,6 @@
 <Solution>
-  <Folder Name="/aspire/">
-    <Project Path="src\aspire\AspireHost.AppHost.csproj" />
-  </Folder>
   <Folder Name="/demos/">
     <Project Path="src/demo1/Demo1-AzureOpenAI-SDK.csproj" />
-    <Project Path="src/demo11/agent/Demo11-AgentFramework-BasicChat.csproj" />
     <Project Path="src/demo2/Demo2-FunctionCalling-RAG.csproj" />
     <Project Path="src/demo3/Demo3-MEAI-FunctionCalling-RAG.csproj" />
     <Project Path="src/demo4/Demo4-SemanticKernel-RAG.csproj" />
@@ -15,6 +11,14 @@
     <Project Path="src/demo10/Demo10-Alarm-Analytics-Process.csproj" />
     <Project Path="src/demo9/Demo9-SemanticKernel-Multi-Agents.csproj" />
     <Project Path="src/demo12-durable-agents/Demo12-Alarm-Analytics-Durable-Agents.csproj" />
+  </Folder>
+  <Folder Name="/chat/">
+    <Project Path="src/demo11/aspire/Demo11.AspireHost.csproj" />
+    <Project Path="src/demo11/agent/Demo11-AgentFramework-BasicChat.csproj" />
+    <Project Path="src/demo11/frontend/frontend.esproj">
+      <BuildType Project="Debug" />
+      <Build />
+    </Project>
   </Folder>
   <Folder Name="/indexers/">
     <Project Path="src/indexer/SwapiIndexer.csproj" />
@@ -33,6 +37,6 @@
     <File Path="LICENSE" />
     <File Path="demo.json" />
     <File Path="httptest.http" />
-    <File Path=".env"/>
+    <File Path=".env" />
   </Folder>
 </Solution>

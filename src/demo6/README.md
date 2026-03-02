@@ -1,4 +1,4 @@
-# Demo6 - Semantic Kernel + Custom MCP
+# Demo6
 
 Integration with Model Context Protocol using a custom MCP server for function calling.
 

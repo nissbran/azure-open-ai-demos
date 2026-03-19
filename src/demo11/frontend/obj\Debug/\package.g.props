@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <PropertyGroup>
+    <PackageJsonName Condition="$(PackageJsonName) == ''">chat-ui</PackageJsonName>
+    <PackageJsonVersion Condition="$(PackageJsonVersion) == ''">0.1.0</PackageJsonVersion>
+    <PackageJsonPrivate Condition="$(PackageJsonPrivate) == ''">true</PackageJsonPrivate>
+    <PackageJsonScriptsDev Condition="$(PackageJsonScriptsDev) == ''">next dev --turbopack</PackageJsonScriptsDev>
+    <PackageJsonScriptsDevDebug Condition="$(PackageJsonScriptsDevDebug) == ''">LOG_LEVEL=debug npm run dev</PackageJsonScriptsDevDebug>
+    <PackageJsonScriptsBuild Condition="$(PackageJsonScriptsBuild) == ''">next build</PackageJsonScriptsBuild>
+    <PackageJsonScriptsStart Condition="$(PackageJsonScriptsStart) == ''">next start</PackageJsonScriptsStart>
+    <PackageJsonScriptsLint Condition="$(PackageJsonScriptsLint) == ''">next lint</PackageJsonScriptsLint>
+    <PackageJsonDependenciesAgUiClient Condition="$(PackageJsonDependenciesAgUiClient) == ''">0.0.47</PackageJsonDependenciesAgUiClient>
+    <PackageJsonDependenciesCopilotkitReactCore Condition="$(PackageJsonDependenciesCopilotkitReactCore) == ''">1.54.0</PackageJsonDependenciesCopilotkitReactCore>
+    <PackageJsonDependenciesCopilotkitReactUi Condition="$(PackageJsonDependenciesCopilotkitReactUi) == ''">1.54.0</PackageJsonDependenciesCopilotkitReactUi>
+    <PackageJsonDependenciesCopilotkitRuntime Condition="$(PackageJsonDependenciesCopilotkitRuntime) == ''">1.54.0</PackageJsonDependenciesCopilotkitRuntime>
+    <PackageJsonDependenciesNext Condition="$(PackageJsonDependenciesNext) == ''">16.1.6</PackageJsonDependenciesNext>
+    <PackageJsonDependenciesReact Condition="$(PackageJsonDependenciesReact) == ''">^19.2.4</PackageJsonDependenciesReact>
+    <PackageJsonDependenciesReactDom Condition="$(PackageJsonDependenciesReactDom) == ''">^19.2.4</PackageJsonDependenciesReactDom>
+    <PackageJsonDependenciesZod Condition="$(PackageJsonDependenciesZod) == ''">^4.3.6</PackageJsonDependenciesZod>
+    <PackageJsonDevdependenciesEslintEslintrc Condition="$(PackageJsonDevdependenciesEslintEslintrc) == ''">^3</PackageJsonDevdependenciesEslintEslintrc>
+    <PackageJsonDevdependenciesTailwindcssPostcss Condition="$(PackageJsonDevdependenciesTailwindcssPostcss) == ''">^4</PackageJsonDevdependenciesTailwindcssPostcss>
+    <PackageJsonDevdependenciesTypesNode Condition="$(PackageJsonDevdependenciesTypesNode) == ''">^20</PackageJsonDevdependenciesTypesNode>
+    <PackageJsonDevdependenciesTypesReact Condition="$(PackageJsonDevdependenciesTypesReact) == ''">^19</PackageJsonDevdependenciesTypesReact>
+    <PackageJsonDevdependenciesTypesReactDom Condition="$(PackageJsonDevdependenciesTypesReactDom) == ''">^19</PackageJsonDevdependenciesTypesReactDom>
+    <PackageJsonDevdependenciesConcurrently Condition="$(PackageJsonDevdependenciesConcurrently) == ''">^9.1.2</PackageJsonDevdependenciesConcurrently>
+    <PackageJsonDevdependenciesEslint Condition="$(PackageJsonDevdependenciesEslint) == ''">^9</PackageJsonDevdependenciesEslint>
+    <PackageJsonDevdependenciesEslintConfigNext Condition="$(PackageJsonDevdependenciesEslintConfigNext) == ''">16.0.8</PackageJsonDevdependenciesEslintConfigNext>
+    <PackageJsonDevdependenciesTailwindcss Condition="$(PackageJsonDevdependenciesTailwindcss) == ''">^4</PackageJsonDevdependenciesTailwindcss>
+    <PackageJsonDevdependenciesTypescript Condition="$(PackageJsonDevdependenciesTypescript) == ''">^5</PackageJsonDevdependenciesTypescript>
+  </PropertyGroup>
+</Project>

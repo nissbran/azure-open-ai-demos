@@ -51,9 +51,6 @@ dotnet run
 * **[Demo11](src/demo11)**: Agent Framework Basic Chat - Basic chat application using the Microsoft Agents AI framework
 * **[Demo12 - Durable Agents](src/demo12-durable-agents)**: Durable Agents - Long-running alarm analytics agents using Azure Durable Functions and the Microsoft Agents AI framework
 
-### Aspire Integration
-* **[Aspire](src/aspire)**: .NET Aspire AppHost - Aspire application host for orchestrating and deploying the demo services
-
 ### Utility Projects
 * **[indexer](src/indexer)**: SWAPI Data Indexer - Indexes Star Wars API data into Azure AI Search for use by the RAG demos
 * **[McpToolServer](src/McpToolServer)**: Custom MCP Server - Example Model Context Protocol server implementation ([Learn about MCP](https://modelcontextprotocol.io))

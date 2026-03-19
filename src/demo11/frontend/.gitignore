@@ -20,6 +20,12 @@
 # production
 /build
 
+# .NET build artifacts
+obj/
+obj\\*
+bin/
+bin\\*
+
 # misc
 .DS_Store
 *.pem

@@ -17,14 +17,14 @@
     
     <!-- AI Packages -->
     <ItemGroup>
-        <PackageReference Include="Azure.AI.OpenAI" Version="2.8.0-beta.1" />
-        <PackageReference Include="Azure.Identity" Version="1.18.0-beta.2" />
-        <PackageReference Include="Microsoft.Agents.AI" Version="1.0.0-rc1" />
-        <PackageReference Include="Microsoft.Agents.AI.OpenAI" Version="1.0.0-rc1" />
-        <PackageReference Include="Microsoft.Agents.AI.Workflows" Version="1.0.0-rc1" />
-        <PackageReference Include="Microsoft.Agents.AI.Hosting.AzureFunctions" Version="1.0.0-preview.260219.1" />
+        <PackageReference Include="Azure.AI.OpenAI" Version="2.9.0-beta.1" />
+        <PackageReference Include="Azure.Identity" Version="1.19.0" />
+        <PackageReference Include="Microsoft.Agents.AI" Version="1.0.0-rc4" />
+        <PackageReference Include="Microsoft.Agents.AI.OpenAI" Version="1.0.0-rc4" />
+        <PackageReference Include="Microsoft.Agents.AI.Workflows" Version="1.0.0-rc4" />
+        <PackageReference Include="Microsoft.Agents.AI.Hosting.AzureFunctions" Version="1.0.0-preview.260311.1" />
         <PackageReference Include="Azure.Search.Documents" Version="11.7.0" />
-        <PackageReference Include="ModelContextProtocol" Version="0.9.0-preview.1" />
+        <PackageReference Include="ModelContextProtocol" Version="1.1.0" />
     </ItemGroup>
 
     <!-- Azure Functions packages -->

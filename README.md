@@ -5,7 +5,7 @@ Demo repo for showcasing how to use Azure OpenAI services with various framework
 ## Prerequisites
 
 - An Azure subscription with access to Azure AI Foundry and Azure AI Search.
-- .NET 9 SDK installed.
+- .NET 10 SDK installed.
 - An IDE such as Visual Studio or Visual Studio Code.
 - Azure CLI installed. [Install Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli)
 
@@ -46,8 +46,14 @@ dotnet run
 * **[Demo7](src/demo7)**: GitHub MCP Server - Function calling using the official GitHub MCP server for repository interactions
 * **[Demo8](src/demo8)**: Azure Foundry Agent Service - Advanced agent service with MCP server integration on Azure Foundry
 
+### Agent Framework Demos
+* **[Demo10](src/demo10)**: Alarm Analytics Process - Agent process-based alarm analytics using Semantic Kernel and Azure AI Search
+* **[Demo11](src/demo11)**: Agent Framework Basic Chat - Basic chat application using the Microsoft Agents AI framework
+* **[Demo12 - Durable Agents](src/demo12-durable-agents)**: Durable Agents - Long-running alarm analytics agents using Azure Durable Functions and the Microsoft Agents AI framework
+
 ### Utility Projects
 * **[indexer](src/indexer)**: SWAPI Data Indexer - Indexes Star Wars API data into Azure AI Search for use by the RAG demos
 * **[McpToolServer](src/McpToolServer)**: Custom MCP Server - Example Model Context Protocol server implementation ([Learn about MCP](https://modelcontextprotocol.io))
+* **[McpInstructionsSupportServer](src/McpInstructionsSupportServer)**: MCP Instructions Support Server - MCP server providing build pipeline setup tools and CI/CD prompt templates
 
 **Disclaimer**: This is a demo repo and not intended for production use.

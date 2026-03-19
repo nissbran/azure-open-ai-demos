@@ -1,28 +1,25 @@
-# Demo11-AgentFramework-BasicChat
+# Demo11 Agent Backend
 
-This project demonstrates a basic chat application using the agent framework, similar to Demo 10, but with only the basic chat functionality as shown in Demo 1.
+This backend powers the Demo11 chat experience.
 
-## Features
-- Basic chat interface
-- Utilizes the agent framework for extensibility
+## What It Does
 
-## How to Run
+- Accepts chat messages from the frontend UI
+- Runs the Microsoft Agent Framework chat logic
+- Returns assistant responses to the UI
 
-1. Build the project:
-   ```sh
-   dotnet build
-   ```
-2. Run the project:
-   ```sh
-   dotnet run --project src/demo11/Demo11-AgentFramework-BasicChat.csproj
-   ```
+The backend is intentionally minimal and focused on basic chat behavior.
 
-## Project Structure
-- `Program.cs`: Entry point with basic chat logic
+## How to Start
 
-## Requirements
-- .NET 10 SDK
+From `src/demo11/agent`:
 
----
+```sh
+dotnet run --project Demo11-AgentFramework-BasicChat.csproj
+```
 
-For more advanced agent orchestration and analytics, see Demo 10.
+To run the full Demo11 solution (backend + frontend) from the Aspire host:
+
+```sh
+dotnet run --project src/demo11/aspire/Demo11.AspireHost.csproj
+```

@@ -28,6 +28,9 @@
     <File Path="infrastructure/azure/main.bicepparam" />
     <File Path="infrastructure/azure/ReadMe.md" />
   </Folder>
+  <Folder Name="/aspire/">
+    <Project Path="src/aspire/AspireHost.AppHost.csproj" />
+  </Folder>
   <Folder Name="/mcp-servers/">
     <Project Path="src/McpInstructionsSupportServer/McpInstructionsSupportServer.csproj" />
     <Project Path="src/McpToolServer/McpToolServer.csproj" />

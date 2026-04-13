@@ -8,16 +8,16 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Azure.Core" Version="1.51.1" />
-        <PackageReference Include="Azure.Identity" Version="1.19.0" />
-        <PackageReference Include="Azure.AI.Agents.Persistent" Version="1.2.0-beta.8" />
-        <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.2" />
+        <PackageReference Include="Azure.Core" Version="1.53.0" />
+        <PackageReference Include="Azure.Identity" Version="1.21.0" />
+        <PackageReference Include="Azure.AI.Agents.Persistent" Version="1.2.0-beta.10" />
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.5" />
         <PackageReference Include="DotNetEnv" Version="3.1.1" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.SemanticKernel" Version="1.70.0" />
-        <PackageReference Include="Microsoft.SemanticKernel.Connectors.AzureOpenAI" Version="1.70.0" />
+        <PackageReference Include="Microsoft.SemanticKernel" Version="1.74.0" />
+        <PackageReference Include="Microsoft.SemanticKernel.Connectors.AzureOpenAI" Version="1.74.0" />
         <PackageReference Include="Azure.Search.Documents" Version="11.7.0" />
     </ItemGroup>
 
@@ -27,10 +27,10 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="ModelContextProtocol" Version="1.1.0" />
+        <PackageReference Include="ModelContextProtocol" Version="1.2.0" />
         <PackageReference Include="Serilog.AspNetCore" Version="10.0.0" />
         <PackageReference Include="Serilog.Sinks.Console" Version="6.1.1" />
-        <PackageReference Include="Spectre.Console" Version="0.54.0" />
+        <PackageReference Include="Spectre.Console" Version="0.55.0" />
     </ItemGroup>
 
 

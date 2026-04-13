@@ -2,7 +2,6 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
-using Azure.Identity;
 using Azure.Monitor.OpenTelemetry.Exporter;
 using Demo10;
 using Microsoft.Extensions.Configuration;

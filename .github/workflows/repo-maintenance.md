@@ -1,7 +1,7 @@
 ---
 description: Daily repository maintenance - checks issues, documentation updates, and security patches
 on:
-  schedule: daily on weekdays
+  schedule: '0 9 * * 1-5' # Every weekday at 09:00 CET (08:00 UTC)
 permissions:
   contents: read
   issues: read

@@ -7,8 +7,8 @@
     <Project Path="src/demo5/Demo5-SemanticKernel-Agents-Otel.csproj" />
     <Project Path="src/demo6/Demo6-Mcp.csproj" />
     <Project Path="src/demo7/Demo7-Mcp-Github.csproj" />
-    <Project Path="src/demo8/Demo8-AgentService.csproj" />
     <Project Path="src/demo10/Demo10-Alarm-Analytics-Process.csproj" />
+    <Project Path="src/demo8/Demo8-Foundry-AgentService.csproj" />
     <Project Path="src/demo9/Demo9-SemanticKernel-Multi-Agents.csproj" />
     <Project Path="src/demo12-durable-agents/Demo12-Alarm-Analytics-Durable-Agents.csproj" />
   </Folder>

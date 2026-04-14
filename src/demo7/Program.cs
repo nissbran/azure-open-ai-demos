@@ -8,9 +8,9 @@ using Spectre.Console;
 Console.OutputEncoding = System.Text.Encoding.UTF8;
 
 var configuration = new ConfigurationBuilder()
-    .AddEnvironmentVariables()
     .AddJsonFile("appsettings.json", false)
     .AddJsonFile("appsettings.local.json", true)
+    .AddEnvironmentVariables()
     .Build();
 
 Log.Logger = new LoggerConfiguration()

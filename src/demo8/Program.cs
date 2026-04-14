@@ -10,10 +10,9 @@ DotNetEnv.Env.TraversePath().Load();
 
 Console.OutputEncoding = System.Text.Encoding.UTF8;
 
-
 var configuration = new ConfigurationBuilder()
-    .AddEnvironmentVariables()
     .AddJsonFile("appsettings.json", false)
+    .AddEnvironmentVariables()
     .AddJsonFile("appsettings.local.json", true)
     .Build();
 
@@ -25,17 +24,17 @@ Log.Logger = new LoggerConfiguration()
 
 // Create chat service
 
-var agentId = configuration["AgentService:AgentId"];
-var chatService = new ChatWithAgentService(configuration, agentId);
+var chatService = new ChatWithAgentService(configuration);
 
 string botName = "Star Wars Assistant";
 
 // Run chat
 WriteWelcomeMessage();
 
+#pragma warning disable OPENAI001
+await chatService.CreateAgentAsync();
+#pragma warning restore OPENAI001
 await chatService.StartNewSessionAsync();
-
-var useStreaming = true;
 
 while (true)
 {
@@ -53,22 +52,12 @@ while (true)
             AnsiConsole.MarkupLine($"[bold green]{botName}:[/] Goodbye!");
             return;
         default:
-            if (useStreaming)
+            AnsiConsole.Markup($"[bold red]{botName}:[/] "); 
+            await foreach (var chunk in chatService.TypeAndStreamMessageAsync(message))
             {
-                AnsiConsole.Markup($"[bold red]{botName}:[/] "); 
-                await foreach (var chunk in chatService.TypeAndStreamMessageAsync(message))
-                {
-                    AnsiConsole.Write(chunk);
-                }
-                AnsiConsole.WriteLine();
-                break;
+                AnsiConsole.Write(chunk);
             }
-            else
-            {
-                var response = await chatService.TypeMessageAsync(message);
-                AnsiConsole.MarkupLine($"[bold red]{botName}:[/] " + response); 
-                AnsiConsole.WriteLine(string.IsNullOrEmpty(response) ? "I'm sorry, I can't do that right now." : response);
-            }
+            AnsiConsole.WriteLine();
             break;
     }
 }

@@ -1,4 +1,7 @@
 {
   "chat.plugins.enabled": true,
-  "chat.mcp.assisted.nuget.enabled": true
+  "chat.mcp.assisted.nuget.enabled": true,
+  "chat.tools.terminal.autoApprove": {
+    "aspire": true
+  }
 }

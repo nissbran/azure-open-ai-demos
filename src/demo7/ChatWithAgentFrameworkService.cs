@@ -41,7 +41,7 @@ public class ChatWithAgentFrameworkService
         var client = new AzureOpenAIClient(
                 new Uri(endpoint),
                 new AzureKeyCredential(apiKey))
-            .GetResponsesClient(model)
+            .GetResponsesClient()
             .AsIChatClient()
             .AsBuilder()
             .UseFunctionInvocation()
@@ -61,7 +61,17 @@ public class ChatWithAgentFrameworkService
             }
         };
 
-        _agent = client.AsAIAgent(Instructions, "GitHubAgent", tools: [_gitHubMcpTool]);
+        _agent = client.AsAIAgent(new ChatClientAgentOptions
+        {
+            Name = "GitHubAgent",
+            ChatOptions = new ChatOptions
+            {
+                Tools = {
+                    _gitHubMcpTool
+                },
+                Instructions = Instructions
+            },
+        });
     }
 
     public async Task StartNewSessionAsync()

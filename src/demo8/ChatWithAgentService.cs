@@ -47,7 +47,7 @@ public class ChatWithAgentService
                     }
                 }));
 
-        _agent = _client.AsAIAgent(agentVersion);
+        _agent = _client.AsAIAgent(agentVersion).AsBuilder().UseOpenTelemetry(sourceName: "ChatWithAgentService").Build();
     }
 
     public async Task StartNewSessionAsync()

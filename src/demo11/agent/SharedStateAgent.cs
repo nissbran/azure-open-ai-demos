@@ -1,26 +1,24 @@
-using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using Microsoft.Agents.AI;
 using Microsoft.Extensions.AI;
 
 namespace Demo11;
 
-[SuppressMessage("Performance", "CA1812:Avoid uninstantiated internal classes", Justification = "Instantiated by ProverbsAgentFactory")]
 internal sealed class SharedStateAgent : DelegatingAIAgent
 {
-    //public SharedStateAgent(AIAgent innerAgent, JsonSerializerOptions jsonSerializerOptions)
-    //    : base(innerAgent)
-    //{
-    //    _jsonSerializerOptions = jsonSerializerOptions;
-    //}
-
-    public SharedStateAgent(IChatClient chatClient) : base(
+    public SharedStateAgent(IChatClient chatClient, IConfiguration configuration) : base(
         chatClient.AsAIAgent(new ChatClientAgentOptions
             {
                 Name = "SharedStateAgent",
                 ChatOptions = new ChatOptions
                 {
-                    Instructions = "Testing agent"
+                    ModelId = configuration["AzureOpenAI:ChatModel"] ?? throw new InvalidOperationException("ChatModel configuration is missing."),
+                    Instructions = "Testing agent",
+                    Reasoning = new ReasoningOptions
+                    {
+                        Effort = ReasoningEffort.Medium,
+                        Output = ReasoningOutput.Full
+                    }
                 },
             })
             .AsBuilder()
@@ -110,7 +108,21 @@ internal sealed class SharedStateAgent : DelegatingAIAgent
         //{
         //    yield break;
         //}
-
+        await foreach(var update in InnerAgent.RunStreamingAsync(messages, options: new ChatClientAgentRunOptions
+                      {
+                          ChatOptions = new ChatOptions
+                          {
+                              Instructions = "Testing agent",
+                              Reasoning = new ReasoningOptions
+                              {
+                                  Effort = ReasoningEffort.Medium,
+                                  Output = ReasoningOutput.Full
+                              }
+                          }
+                      }, cancellationToken: cancellationToken).ConfigureAwait(false))
+        {
+            yield return update;
+        }
 
 
         //var secondRunMessages = messages.Concat(response.Messages).Append(
@@ -118,9 +130,9 @@ internal sealed class SharedStateAgent : DelegatingAIAgent
         //        ChatRole.System,
         //        [new TextContent("Please provide a concise summary of the state changes in at most two sentences.")]));
 
-        await foreach (var update in InnerAgent.RunStreamingAsync(messages, session, options, cancellationToken).ConfigureAwait(false))
-        {
-            yield return update;
-        }
+        // await foreach (var update in InnerAgent.RunStreamingAsync(messages, session, options, cancellationToken).ConfigureAwait(false))
+        // {
+        //     yield return update;
+        // }
     }
 }

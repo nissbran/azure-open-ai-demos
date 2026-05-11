@@ -1,76 +1,79 @@
 "use client";
 
-import {
-  useCoAgent,
-  useFrontendTool
-} from "@copilotkit/react-core";
-import { CopilotKitCSSProperties, CopilotSidebar, CopilotChat } from "@copilotkit/react-ui";
-import { useState } from "react";
-import { AgentState } from "@/lib/types";
+import React, { useState } from "react";
+import { CopilotChat, useRenderTool } from "@copilotkit/react-core/v2";
+import "@copilotkit/react-core/v2/styles.css";
+import { z } from "zod";
 
 export default function CopilotKitPage() {
-  const [themeColor, setThemeColor] = useState("#6366f1");
-
-  // 🪁 Frontend Actions: https://docs.copilotkit.ai/microsoft-agent-framework/frontend-actions
-  useFrontendTool({
-    name: "setThemeColor",
-    description: "Set the theme color of the application",
-    parameters: [
-      {
-        name: "themeColor",
-        type: "string",
-        description: "The theme color to set. Make sure to pick nice colors.",
-        required: true,
-      },
-    ],
-    handler: async ({ themeColor }) => {
-      setThemeColor(themeColor);
-    },
+  useRenderTool({
+    name: "think",
+    parameters: z.object({ thought: z.string() }),
+    render: ({ args, status }: any) => (
+      <DefaultReasoningMessage thought={args?.thought ?? ""} status={status} />
+    ),
   });
 
   return (
-    <main
-      style={
-        { "--copilot-kit-primary-color": themeColor } as CopilotKitCSSProperties
-      }
-    >
-      <CopilotChat
-              //clickOutsideToClose={false}
-              imageUploadsEnabled={true}
-        labels={{
-          title: "Assistant",
-          initial: "👋 Hi, there! You're chatting with an agent.",
-        }}
-        suggestions={[
-          {
-            title: "Poem writing",
-            message: "Write a poem about the sea.",
-          },
-        ]}
-      >
-       {/*<YourMainContent themeColor={themeColor} />*/}
-      </CopilotChat>
-    </main>
+    <CopilotChat
+      agentId="chat_agent"
+      className="h-full rounded-2xl"
+    />
   );
 }
 
-function YourMainContent({ themeColor }: { themeColor: string }) {
-  // 🪁 Shared State: https://docs.copilotkit.ai/pydantic-ai/shared-state
-  const { state, setState } = useCoAgent<AgentState>({
-    name: "chat_agent",
-    initialState: {
-      proverbs: [
-        "CopilotKit may be new, but its the best thing since sliced bread.",
-      ],
-    },
-  });
+// Mirrors CopilotKit's built-in CopilotChatReasoningMessage UX: a
+// collapsible "Thinking…" / "Thought for a moment" card.
+function DefaultReasoningMessage({
+  thought,
+  status,
+}: {
+  thought: string;
+  status?: string;
+}) {
+  const isStreaming = status !== "complete";
+  const [open, setOpen] = useState(isStreaming);
+  const hasContent = thought.length > 0;
 
   return (
     <div
-      style={{ backgroundColor: themeColor }}
-      className="h-screen flex justify-center items-center flex-col transition-colors duration-300"
+      data-testid="reasoning-default"
+      style={{
+        margin: "8px 0",
+        borderRadius: "12px",
+        border: "1px solid var(--copilot-kit-separator-color, #e5e7eb)",
+        background: "var(--copilot-kit-secondary-color, #f9fafb)",
+        padding: "8px 12px",
+        fontSize: "13px",
+      }}
     >
-      {/*<ProverbsCard state={state} setState={setState} />*/}
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        style={{
+          all: "unset",
+          cursor: "pointer",
+          display: "flex",
+          alignItems: "center",
+          gap: "8px",
+          fontWeight: 500,
+          color: "var(--copilot-kit-muted-color, #4b5563)",
+        }}
+      >
+        <span aria-hidden>{open ? "▾" : "▸"}</span>
+        <span>{isStreaming ? "Thinking…" : "Thought for a moment"}</span>
+      </button>
+      {open && hasContent && (
+        <div
+          style={{
+            marginTop: "6px",
+            whiteSpace: "pre-wrap",
+            color: "var(--copilot-kit-muted-color, #6b7280)",
+          }}
+        >
+          {thought}
+        </div>
+      )}
     </div>
   );
 }

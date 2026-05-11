@@ -64,7 +64,7 @@ public class VehicleProductionSearchIndexer
         try
         {
             Log.Information("Deleting existing vehicle production index if it exists...");
-            await _indexClient.DeleteIndexAsync(IndexName);
+            await _indexClient.DeleteIndexAsync(IndexName, cancellationToken: default);
         }
         catch (RequestFailedException ex) when (ex.Status == 404)
         {
@@ -139,7 +139,7 @@ public class VehicleProductionSearchIndexer
             }
         };
 
-        await _indexClient.CreateIndexAsync(index);
+        await _indexClient.CreateIndexAsync(index, cancellationToken: default);
     }
 
     private async Task ImportCsvIntoSearch()

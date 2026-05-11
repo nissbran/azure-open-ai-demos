@@ -28,10 +28,11 @@ builder.Services.AddCors(options =>
 builder.Services.AddAGUI();
 builder.Services.AddSingleton<SharedStateAgent>();
 
+#pragma warning disable OPENAI001
 builder.Services.AddChatClient(provider => new AzureOpenAIClient(
                 new Uri(provider.GetRequiredService<IConfiguration>()["AzureOpenAI:Endpoint"] ?? throw new InvalidOperationException("Endpoint configuration is missing.")),
                 new AzureKeyCredential(provider.GetRequiredService<IConfiguration>()["AzureOpenAI:ApiKey"] ?? throw new InvalidOperationException("ApiKey configuration is missing.")))
-            .GetChatClient(provider.GetRequiredService<IConfiguration>()["AzureOpenAI:ChatModel"] ?? throw new InvalidOperationException("ChatModel configuration is missing."))
+            .GetResponsesClient()
             .AsIChatClient()
             .AsBuilder()
             .UseFunctionInvocation()
@@ -41,8 +42,6 @@ builder.Services.AddChatClient(provider => new AzureOpenAIClient(
 WebApplication app = builder.Build();
 
 app.UseCors();
-
-app.UseMiddleware<SseNullSanitizingMiddleware>();
 
 app.MapAGUI("/agent", app.Services.GetRequiredService<SharedStateAgent>());
 

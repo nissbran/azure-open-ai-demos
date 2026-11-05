@@ -18,6 +18,10 @@ Log.Logger = new LoggerConfiguration()
     .WriteTo.Console(theme: AnsiConsoleTheme.Sixteen)
     .CreateLogger();
 
+var testReader = new SearchTestReader(configuration);
+
+await testReader.ReadTestAsync();
+
 // Initialize the services
 var vehicleReader = new SwapiVehicleReader(configuration);
 var vehicleSearchIndexCreator = new SwapiVehicleSearchIndexCreator(configuration);
@@ -26,10 +30,10 @@ var vehicleVectorizer = new VehicleVectorizer(configuration);
 
 Log.Information("Starting swapi vehicle indexing pipeline with Azure OpenAI");
 
-// Run pipeline
-var vehicles = await vehicleReader.GetVehicles();
-await vehicleVectorizer.Vectorize(vehicles);
-await vehicleSearchIndexCreator.CreateVectorIndexAsync();
-await vehicleSearchIndexer.ImportIntoSearch(vehicles);
-
-Log.Information("Finished indexing {Count} vehicles", vehicles.Count);
+// // Run pipeline
+// var vehicles = await vehicleReader.GetVehicles();
+// await vehicleVectorizer.Vectorize(vehicles);
+// await vehicleSearchIndexCreator.CreateVectorIndexAsync();
+// await vehicleSearchIndexer.ImportIntoSearch(vehicles);
+//
+// Log.Information("Finished indexing {Count} vehicles", vehicles.Count);

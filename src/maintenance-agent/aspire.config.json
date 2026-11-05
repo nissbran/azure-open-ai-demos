@@ -1,0 +1,6 @@
+{
+  "appHost": {
+    "path": "aspire/MaintenanceAgent.AppHost.csproj",
+    "language": "csharp"
+  }
+}

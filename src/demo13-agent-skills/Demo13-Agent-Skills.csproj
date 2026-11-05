@@ -1,0 +1,48 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+         <TargetFramework>net10.0</TargetFramework>
+        <OutputType>Exe</OutputType>
+        <RootNamespace>Demo10</RootNamespace>
+		<UserSecretsId>ca64dc64-4faf-43c1-87c2-3854d28b0ccd</UserSecretsId>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.5" />
+        <PackageReference Include="DotNetEnv" Version="3.1.1" />
+        <PackageReference Include="CsvHelper" Version="33.1.0" />
+        <PackageReference Include="Microsoft.Data.SqlClient" Version="7.0.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.5" />
+    </ItemGroup>
+    
+    <ItemGroup>
+        <PackageReference Include="Azure.AI.OpenAI" Version="2.9.0-beta.1" />
+        <PackageReference Include="Microsoft.Agents.AI" Version="1.1.0" />
+        <PackageReference Include="Microsoft.Agents.AI.OpenAI" Version="1.1.0" />
+        <PackageReference Include="Microsoft.Agents.AI.Workflows" Version="1.1.0" />
+        <PackageReference Include="Azure.Search.Documents" Version="11.7.0" />
+        <PackageReference Include="ModelContextProtocol" Version="1.2.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Serilog.AspNetCore" Version="10.0.0" />
+        <PackageReference Include="Serilog.Sinks.Console" Version="6.1.1" />
+        <PackageReference Include="Serilog.Sinks.OpenTelemetry" Version="4.2.0" />
+        <PackageReference Include="Spectre.Console" Version="0.55.0" />
+        <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.15.2" />
+        <PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.15.0" />
+        <PackageReference Include="Azure.Monitor.OpenTelemetry.Exporter" Version="1.7.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="appsettings.local.json" CopyToOutputDirectory="PreserveNewest" Condition="Exists('appsettings.local.json')" />
+        <None Include="appsettings.json" CopyToOutputDirectory="PreserveNewest" Condition="Exists('appsettings.json')" />
+        <None Include="alarm1.json" CopyToOutputDirectory="PreserveNewest" Condition="Exists('alarm1.json')" />
+    </ItemGroup>
+    
+    <ItemGroup>
+        <None Include="Agents\**\*.csv" CopyToOutputDirectory="PreserveNewest" />
+    </ItemGroup>
+    
+
+</Project>

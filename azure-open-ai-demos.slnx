@@ -1,16 +1,17 @@
 <Solution>
   <Folder Name="/demos/">
-    <Project Path="src/demo1/Demo1-AzureOpenAI-SDK.csproj" />
-    <Project Path="src/demo2/Demo2-FunctionCalling-RAG.csproj" />
-    <Project Path="src/demo3/Demo3-MEAI-FunctionCalling-RAG.csproj" />
-    <Project Path="src/demo4/Demo4-SemanticKernel-RAG.csproj" />
-    <Project Path="src/demo5/Demo5-SemanticKernel-Agents-Otel.csproj" />
-    <Project Path="src/demo6/Demo6-Mcp.csproj" />
-    <Project Path="src/demo7/Demo7-Mcp-Github.csproj" />
+    <Project Path="src/demo14-foundry-hosted-agents/FoundryHostedAgent.csproj" />
     <Project Path="src/demo10/Demo10-Alarm-Analytics-Process.csproj" />
-    <Project Path="src/demo8/Demo8-Foundry-AgentService.csproj" />
-    <Project Path="src/demo9/Demo9-SemanticKernel-Multi-Agents.csproj" />
     <Project Path="src/demo12-durable-agents/Demo12-Alarm-Analytics-Durable-Agents.csproj" />
+    <Project Path="src/harness/MAF-Harness/MAF-Harness.csproj" />
+    <Project Path="src/legacy/Console/Console-AzureOpenAI-SDK/Demo1-AzureOpenAI-SDK.csproj" />
+    <Project Path="src/legacy/Console/Console-FunctionCalling-AISearch/Demo2-FunctionCalling-RAG.csproj" />
+    <Project Path="src/legacy/Console/Console-MEAI-FunctionCalling-RAG/Demo3-MEAI-FunctionCalling-RAG.csproj" />
+    <Project Path="src/legacy/SemanticKernel/demo4/Demo4-SemanticKernel-RAG.csproj" />
+    <Project Path="src/legacy/SemanticKernel/demo5/Demo5-SemanticKernel-Agents-Otel.csproj" />
+    <Project Path="src/legacy/SemanticKernel/demo9/Demo9-SemanticKernel-Multi-Agents.csproj" />
+    <Project Path="src/mcp/hosted-mcp/Mcp-Hosted-Github.csproj" />
+    <Project Path="src/mcp/prm-with-callback/McpPrmCallback.csproj" />
   </Folder>
   <Folder Name="/chat/">
     <Project Path="src/demo11/aspire/Demo11.AspireHost.csproj" />
@@ -29,7 +30,6 @@
     <File Path="infrastructure/azure/ReadMe.md" />
   </Folder>
   <Folder Name="/mcp-servers/">
-    <Project Path="src/McpInstructionsSupportServer/McpInstructionsSupportServer.csproj" />
     <Project Path="src/McpToolServer/McpToolServer.csproj" />
   </Folder>
   <Folder Name="/Solution Items/">

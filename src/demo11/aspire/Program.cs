@@ -13,6 +13,4 @@ var frontend = builder.AddNextJsApp("frontend", "../frontend")
     .WithHttpEndpoint(port: 3000, env: "PORT");
 #pragma warning restore ASPIREJAVASCRIPT001
 
-
-
 builder.Build().Run();

@@ -1,0 +1,6 @@
+<Solution>
+    <Project Path="aspire/MaintenanceAgent.AppHost.csproj" />
+    <Project Path="indexer/MaintenanceManualsIndexer.csproj" />
+    <Project Path="agent/MaintenanceAgent.csproj" />
+
+</Solution>

@@ -8,19 +8,19 @@ internal sealed class SharedStateAgent : DelegatingAIAgent
 {
     public SharedStateAgent(IChatClient chatClient, IConfiguration configuration) : base(
         chatClient.AsAIAgent(new ChatClientAgentOptions
+        {
+            Name = "SharedStateAgent",
+            ChatOptions = new ChatOptions
             {
-                Name = "SharedStateAgent",
-                ChatOptions = new ChatOptions
+                ModelId = configuration["AzureOpenAI:ChatModel"] ?? throw new InvalidOperationException("ChatModel configuration is missing."),
+                Instructions = "Testing agent",
+                Reasoning = new ReasoningOptions
                 {
-                    ModelId = configuration["AzureOpenAI:ChatModel"] ?? throw new InvalidOperationException("ChatModel configuration is missing."),
-                    Instructions = "Testing agent",
-                    Reasoning = new ReasoningOptions
-                    {
-                        Effort = ReasoningEffort.Medium,
-                        Output = ReasoningOutput.Full
-                    }
-                },
-            })
+                    Effort = ReasoningEffort.Medium,
+                    Output = ReasoningOutput.Full
+                }
+            },
+        })
             .AsBuilder()
             .Build())
     {
@@ -38,9 +38,9 @@ internal sealed class SharedStateAgent : DelegatingAIAgent
     }
 
     protected override async IAsyncEnumerable<AgentResponseUpdate> RunCoreStreamingAsync(
-        IEnumerable<ChatMessage> messages, 
-        AgentSession? session = null, 
-        AgentRunOptions? options = null, 
+        IEnumerable<ChatMessage> messages,
+        AgentSession? session = null,
+        AgentRunOptions? options = null,
         CancellationToken cancellationToken = default)
     {
         //if (options is not ChatClientAgentRunOptions { ChatOptions.AdditionalProperties: { } properties } chatRunOptions ||
@@ -108,19 +108,37 @@ internal sealed class SharedStateAgent : DelegatingAIAgent
         //{
         //    yield break;
         //}
-        await foreach(var update in InnerAgent.RunStreamingAsync(messages, options: new ChatClientAgentRunOptions
-                      {
-                          ChatOptions = new ChatOptions
-                          {
-                              Instructions = "Testing agent",
-                              Reasoning = new ReasoningOptions
-                              {
-                                  Effort = ReasoningEffort.Medium,
-                                  Output = ReasoningOutput.Full
-                              }
-                          }
-                      }, cancellationToken: cancellationToken).ConfigureAwait(false))
+
+
+        // Generate unique message ID per streaming response
+        string messageId = $"msg_{Guid.NewGuid():N}";
+        await foreach (var update in InnerAgent.RunStreamingAsync(messages, options: new ChatClientAgentRunOptions
         {
+            ChatOptions = new ChatOptions
+            {
+                Instructions = "Testing agent",
+                Reasoning = new ReasoningOptions
+                {
+                    Effort = ReasoningEffort.Medium,
+                    Output = ReasoningOutput.Full
+                }
+            }
+        }, cancellationToken: cancellationToken).ConfigureAwait(false))
+        {
+            if (string.IsNullOrEmpty(update.MessageId))
+            {
+                Console.WriteLine($"SharedStateAgent: Assigning message ID {messageId} to update. Response: {JsonSerializer.Serialize(update)}");
+                update.MessageId = messageId;
+            }
+
+            // CRITICAL: Also set on underlying ChatResponseUpdate in RawRepresentation
+            if (update.RawRepresentation is ChatResponseUpdate chatUpdate &&
+                string.IsNullOrEmpty(chatUpdate.MessageId))
+            {
+                Console.WriteLine($"SharedStateAgent: Assigning message ID {messageId} to underlying ChatResponseUpdate. Response: {JsonSerializer.Serialize(chatUpdate)}");
+                chatUpdate.MessageId = messageId;
+            }
+
             yield return update;
         }
 

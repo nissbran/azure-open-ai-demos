@@ -22,3 +22,5 @@
 .env
 appsettings.local.json
 *.bicepparam
+
+test.http
